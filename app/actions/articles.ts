@@ -3,6 +3,7 @@
 import { revalidatePath } from "next/cache";
 import { z } from "zod";
 import { createClient } from "@/lib/supabase/server";
+import { requireAdminAuth } from "@/lib/supabase/auth-guard";
 import { deleteStorageFile } from "@/lib/supabase/storage";
 
 const ArticleSchema = z.object({
@@ -57,6 +58,8 @@ export async function createArticle(formData: FormData): Promise<void> {
   }
 
   const supabase = await createClient();
+  await requireAdminAuth(supabase);
+
   const { error } = await supabase.from("articles").insert({
     slug: parsed.data.slug,
     title: parsed.data.title,
@@ -89,6 +92,8 @@ export async function updateArticle(
   }
 
   const supabase = await createClient();
+  await requireAdminAuth(supabase);
+
   const newImages = parseImagesField(parsed.data.images);
 
   // 1. Fetch current article to check if image or gallery was replaced
@@ -143,6 +148,7 @@ export async function updateArticle(
 
 export async function deleteArticle(id: string): Promise<void> {
   const supabase = await createClient();
+  await requireAdminAuth(supabase);
 
   // 1. Fetch current article images to delete from storage
   const { data: article } = await supabase
@@ -171,3 +177,4 @@ export async function deleteArticle(id: string): Promise<void> {
   revalidatePath("/");
   revalidatePath("/admin/articles");
 }
+

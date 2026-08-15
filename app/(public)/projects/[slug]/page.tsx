@@ -6,6 +6,11 @@ import Container from "@/component/UI/Container";
 import ProjectCard from "@/component/UI/ProjectCard";
 import Button from "@/component/UI/Button";
 import { getProjects, getProjectBySlug } from "@/lib/data";
+import {
+  SITE_URL,
+  generateProjectSchema,
+  generateBreadcrumbSchema,
+} from "@/lib/seo";
 
 interface PageProps {
   readonly params: Promise<{ slug: string }>;
@@ -19,13 +24,38 @@ export async function generateMetadata({
 
   if (!project) {
     return {
-      title: "Project Not Found | Toluwanimi Odufeko",
+      title: "Project Not Found",
     };
   }
 
+  const canonicalUrl = `/projects/${project.slug}`;
+
   return {
-    title: `${project.title} | Toluwanimi Odufeko`,
+    title: project.title,
     description: project.excerpt,
+    alternates: {
+      canonical: canonicalUrl,
+    },
+    openGraph: {
+      type: "website",
+      url: canonicalUrl,
+      title: project.title,
+      description: project.excerpt,
+      images: [
+        {
+          url: project.image,
+          width: 1200,
+          height: 630,
+          alt: project.title,
+        },
+      ],
+    },
+    twitter: {
+      card: "summary_large_image",
+      title: project.title,
+      description: project.excerpt,
+      images: [project.image],
+    },
   };
 }
 
@@ -41,6 +71,14 @@ export default async function ProjectDetailPage({ params }: PageProps) {
     notFound();
   }
 
+  const canonicalUrl = `${SITE_URL}/projects/${project.slug}`;
+  const projectSchema = generateProjectSchema(project, canonicalUrl);
+  const breadcrumbSchema = generateBreadcrumbSchema([
+    { name: "Home", url: "/" },
+    { name: "Projects", url: "/projects" },
+    { name: project.title, url: `/projects/${project.slug}` },
+  ]);
+
   const relatedProjects = allProjects
     .filter(
       (p) =>
@@ -51,6 +89,14 @@ export default async function ProjectDetailPage({ params }: PageProps) {
 
   return (
     <article className="w-full">
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(projectSchema) }}
+      />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbSchema) }}
+      />
       {/* Hero Image Banner */}
       <div className="relative aspect-video sm:aspect-21/9 max-h-120 w-full overflow-hidden bg-neutral-200 border-b border-dark-one/15">
         <Image
@@ -99,7 +145,7 @@ export default async function ProjectDetailPage({ params }: PageProps) {
 
             <div className="mt-8 space-y-6 font-content text-base sm:text-lg leading-relaxed text-muted">
               {project.body.map((paragraph, index) => (
-                <p key={index}>{paragraph}</p>
+                <p key={`${project.slug}-p-${index}`}>{paragraph}</p>
               ))}
             </div>
 

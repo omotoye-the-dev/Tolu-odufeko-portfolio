@@ -69,7 +69,7 @@ export function AdminSidebar({ isOpen = false, onClose }: AdminSidebarProps) {
       <div className="flex items-center justify-between border-b border-dark-one/10 px-6 py-5 bg-white shrink-0">
         <div className="flex items-center gap-3">
           <Image
-            src="/Logo.png"
+            src="/logo.png"
             alt="Toluwanimi Odufeko Logo"
             width={28}
             height={25}

@@ -3,6 +3,7 @@
 import { revalidatePath } from "next/cache";
 import { z } from "zod";
 import { createClient } from "@/lib/supabase/server";
+import { requireAdminAuth } from "@/lib/supabase/auth-guard";
 import { deleteStorageFile } from "@/lib/supabase/storage";
 
 const SettingsSchema = z.object({
@@ -22,6 +23,7 @@ export async function updateSiteSettings(formData: FormData): Promise<void> {
   }
 
   const supabase = await createClient();
+  await requireAdminAuth(supabase);
 
   // 1. Fetch current settings to check if CV was replaced or removed
   const { data: currentSettings } = await supabase
@@ -57,3 +59,4 @@ export async function updateSiteSettings(formData: FormData): Promise<void> {
   revalidatePath("/contact");
   revalidatePath("/admin/settings");
 }
+

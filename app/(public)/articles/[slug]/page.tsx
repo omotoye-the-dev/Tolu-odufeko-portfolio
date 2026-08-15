@@ -5,6 +5,11 @@ import { notFound } from "next/navigation";
 import Container from "@/component/UI/Container";
 import ArticleCard from "@/component/UI/ArticleCard";
 import { getArticles, getArticleBySlug } from "@/lib/data";
+import {
+  SITE_URL,
+  generateArticleSchema,
+  generateBreadcrumbSchema,
+} from "@/lib/seo";
 
 interface PageProps {
   readonly params: Promise<{ slug: string }>;
@@ -18,13 +23,42 @@ export async function generateMetadata({
 
   if (!article) {
     return {
-      title: "Article Not Found | Toluwanimi Odufeko",
+      title: "Article Not Found",
     };
   }
 
+  const canonicalUrl = `/articles/${article.slug}`;
+
   return {
-    title: `${article.title} | Toluwanimi Odufeko`,
+    title: article.title,
     description: article.excerpt,
+    alternates: {
+      canonical: canonicalUrl,
+    },
+    openGraph: {
+      type: "article",
+      url: canonicalUrl,
+      title: article.title,
+      description: article.excerpt,
+      publishedTime: article.date,
+      modifiedTime: article.date,
+      authors: ["Toluwanimi Odufeko"],
+      tags: [...article.tags],
+      images: [
+        {
+          url: article.image,
+          width: 1200,
+          height: 630,
+          alt: article.title,
+        },
+      ],
+    },
+    twitter: {
+      card: "summary_large_image",
+      title: article.title,
+      description: article.excerpt,
+      images: [article.image],
+    },
   };
 }
 
@@ -39,6 +73,14 @@ export default async function ArticleDetailPage({ params }: PageProps) {
   if (!article) {
     notFound();
   }
+
+  const canonicalUrl = `${SITE_URL}/articles/${article.slug}`;
+  const articleSchema = generateArticleSchema(article, canonicalUrl);
+  const breadcrumbSchema = generateBreadcrumbSchema([
+    { name: "Home", url: "/" },
+    { name: "Articles", url: "/articles" },
+    { name: article.title, url: `/articles/${article.slug}` },
+  ]);
 
   const sortedArticles = [...allArticles].sort((a, b) =>
     b.date.localeCompare(a.date)
@@ -58,6 +100,14 @@ export default async function ArticleDetailPage({ params }: PageProps) {
 
   return (
     <article className="w-full">
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(articleSchema) }}
+      />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbSchema) }}
+      />
       {/* Featured Banner Image */}
       <div className="relative aspect-video sm:aspect-21/9 max-h-120 w-full overflow-hidden bg-neutral-200 border-b border-dark-one/15">
         <Image
@@ -110,7 +160,7 @@ export default async function ArticleDetailPage({ params }: PageProps) {
           {/* Article Prose */}
           <div className="mt-10 space-y-6 font-content text-base sm:text-lg leading-relaxed text-muted">
             {article.body.map((paragraph, i) => (
-              <p key={i}>{paragraph}</p>
+              <p key={`${article.slug}-p-${i}`}>{paragraph}</p>
             ))}
           </div>
 

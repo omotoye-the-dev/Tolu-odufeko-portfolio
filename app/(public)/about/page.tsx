@@ -5,9 +5,18 @@ import Button from "@/component/UI/Button";
 import { skills } from "@/lib/constants";
 
 export const metadata: Metadata = {
-  title: "About | Toluwanimi Odufeko",
+  title: "About",
   description:
-    "Engineer, builder, and voice for impact working at the intersection of engineering, reliable energy, technology, and people development.",
+    "Learn about Toluwanimi Odufeko — Electrical engineer in the energy sector, software builder, and founder of Donate Drive empowering children across underserved communities.",
+  alternates: {
+    canonical: "/about",
+  },
+  openGraph: {
+    title: "About Toluwanimi Odufeko | Engineer, Builder, Voice for Impact",
+    description:
+      "Electrical engineer in energy & oil/gas, software builder, and founder of Donate Drive. Discover his story, engineering focus, and community initiatives.",
+    url: "/about",
+  },
 };
 
 const NGO_IMAGES = [

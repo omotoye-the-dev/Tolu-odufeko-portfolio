@@ -3,6 +3,7 @@
 import { revalidatePath } from "next/cache";
 import { z } from "zod";
 import { createClient } from "@/lib/supabase/server";
+import { requireAdminAuth } from "@/lib/supabase/auth-guard";
 import { deleteStorageFile } from "@/lib/supabase/storage";
 
 // ─────────────────────────────────────────────
@@ -70,6 +71,8 @@ export async function createProject(formData: FormData): Promise<void> {
   }
 
   const supabase = await createClient();
+  await requireAdminAuth(supabase);
+
   const { error } = await supabase.from("projects").insert({
     slug: parsed.data.slug,
     title: parsed.data.title,
@@ -103,6 +106,8 @@ export async function updateProject(
   }
 
   const supabase = await createClient();
+  await requireAdminAuth(supabase);
+
   const newImages = parseImagesField(parsed.data.images);
 
   // 1. Fetch current project to check if image or gallery images were removed
@@ -158,6 +163,7 @@ export async function updateProject(
 
 export async function deleteProject(id: string): Promise<void> {
   const supabase = await createClient();
+  await requireAdminAuth(supabase);
 
   // 1. Fetch current project images to delete from storage
   const { data: project } = await supabase
@@ -186,3 +192,4 @@ export async function deleteProject(id: string): Promise<void> {
   revalidatePath("/");
   revalidatePath("/admin/projects");
 }
+

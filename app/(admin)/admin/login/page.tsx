@@ -119,7 +119,7 @@ export default function AdminLoginPage() {
       {/* Logo */}
       <div className="mb-10 flex flex-col items-center gap-3"> 
         <Image
-          src="/Logo.png"
+          src="/logo.png"
           alt="Toluwanimi Odufeko Logo"
           width={70}
           height={60}

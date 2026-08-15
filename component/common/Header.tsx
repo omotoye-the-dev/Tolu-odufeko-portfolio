@@ -78,7 +78,7 @@ export function Header() {
             onClick={handleCloseMenu}
           >
             <Image
-              src="/Logo.png"
+              src="/logo.png"
               alt="Toluwanimi Odufeko Logo"
               width={50}
               height={45}

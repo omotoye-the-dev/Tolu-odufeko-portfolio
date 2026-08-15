@@ -3,9 +3,18 @@ import ArticlesContent from "@/component/sections/ArticlesContent";
 import { getArticles } from "@/lib/data";
 
 export const metadata: Metadata = {
-  title: "Articles | Toluwanimi Odufeko",
+  title: "Articles",
   description:
-    "Notes, essays, and technical reflections on engineering, systems design, NGO leadership, and personal growth.",
+    "Technical reflections, engineering analysis, solar microgrids, NGO leadership lessons, and essays by Toluwanimi Odufeko.",
+  alternates: {
+    canonical: "/articles",
+  },
+  openGraph: {
+    title: "Articles | Toluwanimi Odufeko",
+    description:
+      "Technical essays, hardware engineering reflections, and social impact insights by Toluwanimi Odufeko.",
+    url: "/articles",
+  },
 };
 
 export default async function ArticlesPage() {

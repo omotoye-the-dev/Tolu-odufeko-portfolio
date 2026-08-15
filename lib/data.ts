@@ -2,50 +2,9 @@
 // Static placeholder arrays at the bottom are kept only as fallback/seed reference.
 
 import { createClient } from "@/lib/supabase/server";
+import type { Project, Article, NowItem, SiteSettings } from "@/types";
 
-// ─────────────────────────────────────────────
-// Types
-// ─────────────────────────────────────────────
-
-export type Project = {
-  id?: string;
-  slug: string;
-  title: string;
-  categories: string[];
-  excerpt: string;
-  image: string;
-  images?: string[];
-  date: string;
-  techStack: string[];
-  featured?: boolean;
-  link?: string;
-  body: string[];
-};
-
-export type Article = {
-  id?: string;
-  slug: string;
-  title: string;
-  excerpt: string;
-  image: string;
-  images?: string[];
-  date: string;
-  readTime: string;
-  tags: string[];
-  link?: string;
-  body: string[];
-};
-
-export type NowItem = {
-  id?: string;
-  title: string;
-  description: string;
-  date: string;
-  status: string;
-  sortOrder?: number;
-  createdAt?: string;
-  updatedAt?: string;
-};
+export type { Project, Article, NowItem, SiteSettings };
 
 // ─────────────────────────────────────────────
 // Row shape returned by Supabase (snake_case)
@@ -230,14 +189,6 @@ export async function getNowItems(): Promise<NowItem[]> {
   return (data as NowItemRow[]).map(mapNowItem);
 }
 
-export type SiteSettings = {
-  id: string;
-  cvUrl: string | null;
-  githubUrl: string;
-  linkedinUrl: string;
-  twitterUrl: string | null;
-  email: string;
-};
 
 interface SiteSettingsRow {
   id: string;

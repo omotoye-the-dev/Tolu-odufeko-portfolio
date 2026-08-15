@@ -3,9 +3,18 @@ import Container from "@/component/UI/Container";
 import { getNowItems } from "@/lib/data";
 
 export const metadata: Metadata = {
-  title: "Now | Toluwanimi Odufeko",
+  title: "Now",
   description:
-    "A running snapshot of what Toluwanimi Odufeko is currently building, learning, reading, and focusing on.",
+    "A public log of what Toluwanimi Odufeko is currently focused on, building, and learning.",
+  alternates: {
+    canonical: "/now",
+  },
+  openGraph: {
+    title: "What I'm Doing Now | Toluwanimi Odufeko",
+    description:
+      "A real-time snapshot of current engineering projects, NGO initiatives, and focus areas.",
+    url: "/now",
+  },
 };
 
 export default async function NowPage() {
@@ -15,7 +24,7 @@ export default async function NowPage() {
     const ts = item.updatedAt || item.createdAt;
     if (!ts) return latest;
     const d = new Date(ts);
-    if (isNaN(d.getTime())) return latest;
+    if (Number.isNaN(d.getTime())) return latest;
     if (!latest || d > latest) return d;
     return latest;
   }, null);
@@ -49,9 +58,9 @@ export default async function NowPage() {
 
         {/* Timeline Items List */}
         <ul className="mt-6 divide-y divide-dark-one/15">
-          {nowItems.map((item) => (
+          {nowItems.map((item, index) => (
             <li
-              key={item.title}
+              key={item.id ?? `${item.title}-${index}`}
               className="group grid grid-cols-1 gap-3 py-8 sm:grid-cols-[200px_1fr] sm:gap-6 transition-colors hover:bg-white/40 px-3 sm:px-4 rounded-xl"
             >
               <div className="flex flex-row sm:flex-col items-center sm:items-start justify-between sm:justify-start gap-2">

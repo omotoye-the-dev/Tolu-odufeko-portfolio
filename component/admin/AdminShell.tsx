@@ -28,7 +28,7 @@ export function AdminShell({ children }: AdminShellProps) {
       <header className="md:hidden sticky top-0 z-30 flex h-14 w-full shrink-0 items-center justify-between border-b border-dark-one/10 bg-white px-4 shadow-2xs">
         <div className="flex items-center gap-2.5">
           <Image
-            src="/Logo.png"
+            src="/logo.png"
             alt="Toluwanimi Odufeko Logo"
             width={24}
             height={21}

@@ -8,7 +8,7 @@ import { deleteStorageFile } from "@/lib/supabase/storage";
 import { toast } from "@/hooks/useToast";
 
 export interface MultiImageUploadProps {
-  readonly defaultValues?: string[];
+  readonly defaultValues?: readonly string[];
   readonly name?: string;
   readonly label?: string;
   readonly hint?: string;
@@ -24,7 +24,7 @@ export function MultiImageUpload({
   folder = "projects",
   bucket = "portfolio-media",
 }: MultiImageUploadProps) {
-  const [images, setImages] = useState<string[]>(defaultValues);
+  const [images, setImages] = useState<string[]>([...defaultValues]);
   const [isDragging, setIsDragging] = useState<boolean>(false);
   const [manualUrl, setManualUrl] = useState<string>("");
   const [isUploading, startUpload] = useTransition();

@@ -3,9 +3,18 @@ import ProjectsContent from "@/component/sections/ProjectsContent";
 import { getProjects } from "@/lib/data";
 
 export const metadata: Metadata = {
-  title: "Projects | Toluwanimi Odufeko",
+  title: "Projects",
   description:
-    "Explore engineering, software, and NGO projects built for reliability and real-world impact.",
+    "Explore engineering, hardware, software, and nonprofit impact projects built by Toluwanimi Odufeko.",
+  alternates: {
+    canonical: "/projects",
+  },
+  openGraph: {
+    title: "Projects | Toluwanimi Odufeko",
+    description:
+      "Explore engineering, embedded systems, software tools, and NGO initiatives built by Toluwanimi Odufeko.",
+    url: "/projects",
+  },
 };
 
 export default async function ProjectsPage() {

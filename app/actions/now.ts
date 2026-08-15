@@ -3,6 +3,7 @@
 import { revalidatePath } from "next/cache";
 import { z } from "zod";
 import { createClient } from "@/lib/supabase/server";
+import { requireAdminAuth } from "@/lib/supabase/auth-guard";
 
 const NowItemSchema = z.object({
   title: z.string().min(1, "Title is required"),
@@ -21,6 +22,8 @@ export async function createNowItem(formData: FormData): Promise<void> {
   }
 
   const supabase = await createClient();
+  await requireAdminAuth(supabase);
+
   const { error } = await supabase.from("now_items").insert({
     title: parsed.data.title,
     description: parsed.data.description,
@@ -48,6 +51,8 @@ export async function updateNowItem(
   }
 
   const supabase = await createClient();
+  await requireAdminAuth(supabase);
+
   const { error } = await supabase
     .from("now_items")
     .update({
@@ -68,6 +73,8 @@ export async function updateNowItem(
 
 export async function deleteNowItem(id: string): Promise<void> {
   const supabase = await createClient();
+  await requireAdminAuth(supabase);
+
   const { error } = await supabase.from("now_items").delete().eq("id", id);
   if (error) throw new Error(error.message);
 
@@ -75,3 +82,4 @@ export async function deleteNowItem(id: string): Promise<void> {
   revalidatePath("/");
   revalidatePath("/admin/now");
 }
+

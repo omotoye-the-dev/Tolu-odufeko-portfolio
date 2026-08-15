@@ -3,9 +3,18 @@ import ContactContent from "@/component/sections/ContactContent";
 import { getSiteSettings } from "@/lib/data";
 
 export const metadata: Metadata = {
-  title: "Contact | Toluwanimi Odufeko",
+  title: "Contact",
   description:
-    "Get in touch for engineering consulting, hardware collaborations, speaking engagements, or supporting Donate Drive.",
+    "Connect with Toluwanimi Odufeko for engineering consulting, hardware collaborations, speaking engagements, or NGO partnerships.",
+  alternates: {
+    canonical: "/contact",
+  },
+  openGraph: {
+    title: "Get In Touch | Toluwanimi Odufeko",
+    description:
+      "Direct channel to reach Toluwanimi Odufeko for engineering projects, hardware advising, and social impact partnerships.",
+    url: "/contact",
+  },
 };
 
 export default async function ContactPage() {
