@@ -1,22 +1,24 @@
 /**
  * Environment configuration and runtime validation.
- * Fails loudly at the boundary with clear messages if critical secrets or URLs are missing.
+ * Provides safe fallback defaults during build time so that static page generation
+ * and CI/CD pipelines (e.g. Vercel) succeed without requiring live credentials during build.
  */
 
-function getEnvVariable(name: string, isRequired: boolean = true): string {
-  const value = process.env[name];
-  if (!value && isRequired) {
-    throw new Error(
-      `[Env Config] Missing required environment variable: "${name}". Check your .env.local or deployment configuration.`
-    );
-  }
-  return value ?? "";
-}
+const FALLBACK_SUPABASE_URL = "https://placeholder-project.supabase.co";
+const FALLBACK_SUPABASE_ANON_KEY = "placeholder-anon-key";
 
 export const env = {
-  NEXT_PUBLIC_SUPABASE_URL: getEnvVariable("NEXT_PUBLIC_SUPABASE_URL"),
-  NEXT_PUBLIC_SUPABASE_ANON_KEY: getEnvVariable("NEXT_PUBLIC_SUPABASE_ANON_KEY"),
-  SUPABASE_SERVICE_ROLE_KEY: getEnvVariable("SUPABASE_SERVICE_ROLE_KEY", false),
+  NEXT_PUBLIC_SUPABASE_URL:
+    process.env.NEXT_PUBLIC_SUPABASE_URL || FALLBACK_SUPABASE_URL,
+  NEXT_PUBLIC_SUPABASE_ANON_KEY:
+    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || FALLBACK_SUPABASE_ANON_KEY,
+  SUPABASE_SERVICE_ROLE_KEY: process.env.SUPABASE_SERVICE_ROLE_KEY || "",
+  NEXT_PUBLIC_SITE_URL:
+    process.env.NEXT_PUBLIC_SITE_URL || "https://toluodufeko.com",
   NODE_ENV: process.env.NODE_ENV || "development",
   isProduction: process.env.NODE_ENV === "production",
+  isSupabaseConfigured: Boolean(
+    process.env.NEXT_PUBLIC_SUPABASE_URL &&
+      process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY
+  ),
 } as const;
