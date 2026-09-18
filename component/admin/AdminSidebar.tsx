@@ -16,6 +16,8 @@ interface NavItem {
 
 const NAV_ITEMS: readonly NavItem[] = [
   { label: "Dashboard", href: "/admin", icon: "⬡" },
+  { label: "Site Details", href: "/admin/site-details", icon: "✎" },
+  { label: "Gallery", href: "/admin/gallery", icon: "🖼" },
   { label: "Projects", href: "/admin/projects", icon: "◈" },
   { label: "Articles", href: "/admin/articles", icon: "◇" },
   { label: "Now", href: "/admin/now", icon: "◉" },

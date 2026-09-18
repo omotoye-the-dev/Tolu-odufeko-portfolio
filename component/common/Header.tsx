@@ -16,6 +16,7 @@ const NAV_ITEMS: readonly NavItem[] = [
   { label: "About", href: "/about" },
   { label: "Projects", href: "/projects" },
   { label: "Articles", href: "/articles" },
+  { label: "Gallery", href: "/gallery" },
   { label: "Now", href: "/now" },
   { label: "Contact", href: "/contact" },
 ] as const;
@@ -68,7 +69,7 @@ export function Header() {
           ? "bg-light shadow-xs border-b border-muted/15 py-3"
           : "bg-transparent py-4 border-b border-transparent"
       )}
-      style={{ backgroundColor: isScrolled || isMobileMenuOpen ? "#fffff1" : undefined }}
+      style={{ backgroundColor: isScrolled || isMobileMenuOpen ? "#ffffff" : undefined }}
     >
       <div className="mx-auto flex max-w-7xl items-center justify-between px-4 sm:px-6 md:px-10 lg:px-16">
         <div>
@@ -172,7 +173,7 @@ export function Header() {
         <div
           id="mobile-navigation"
           className="fixed inset-x-0 top-14.25 sm:top-16.25 bottom-0 z-40 flex flex-col bg-light border-t border-muted/15 px-6 py-8 md:hidden overflow-y-auto shadow-2xl animate-in fade-in duration-150"
-          style={{ backgroundColor: "#fffff1" }}
+          style={{ backgroundColor: "#ffffff" }}
         >
           <nav aria-label="Mobile navigation" className="flex flex-col gap-2">
             <ul className="font-content flex flex-col gap-2">

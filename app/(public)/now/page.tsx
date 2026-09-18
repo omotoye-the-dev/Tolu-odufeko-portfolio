@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import Container from "@/component/UI/Container";
-import { getNowItems } from "@/lib/data";
+import { getNowItems, getSiteSettings } from "@/lib/data";
 
 export const metadata: Metadata = {
   title: "Now",
@@ -14,11 +14,29 @@ export const metadata: Metadata = {
     description:
       "A real-time snapshot of current engineering projects, NGO initiatives, and focus areas.",
     url: "/now",
+    images: [
+      {
+        url: "/images/tolu-odufeko.png",
+        width: 1200,
+        height: 630,
+        alt: "What Toluwanimi Odufeko is doing now",
+      },
+    ],
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "What I'm Doing Now | Toluwanimi Odufeko",
+    description:
+      "A real-time snapshot of current engineering projects, NGO initiatives, and focus areas.",
+    images: ["/images/tolu-odufeko.png"],
   },
 };
 
 export default async function NowPage() {
-  const nowItems = await getNowItems();
+  const [nowItems, settings] = await Promise.all([
+    getNowItems(),
+    getSiteSettings(),
+  ]);
 
   const latestDate = nowItems.reduce<Date | null>((latest, item) => {
     const ts = item.updatedAt || item.createdAt;
@@ -45,13 +63,14 @@ export default async function NowPage() {
         {/* Header */}
         <div className="border-b border-dark-one/15 pb-10">
           <span className="font-content text-xs sm:text-sm font-semibold uppercase tracking-wider text-accent-strong">
-            Focus &amp; Priorities
+            {settings.nowEyebrow ?? "Focus & Priorities"}
           </span>
           <h1 className="mt-2 font-header text-4xl sm:text-5xl md:text-6xl font-bold tracking-tight text-dark-one">
-            What I&apos;m Doing Now
+            {settings.nowTitle ?? "What I'm Doing Now"}
           </h1>
           <p className="mt-4 max-w-xl font-content text-base sm:text-lg text-muted">
-            A running snapshot of where my attention actually is. Last updated{" "}
+            {settings.nowSubtext ?? "A running snapshot of where my attention actually is."}{" "}
+            Last updated{" "}
             <span className="font-semibold text-dark-one">{lastUpdatedDisplay}</span>.
           </p>
         </div>

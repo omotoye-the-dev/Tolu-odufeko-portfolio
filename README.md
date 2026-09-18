@@ -29,15 +29,15 @@ An enterprise-grade, high-performance personal portfolio and content management 
 
 ## 🛠 Tech Stack
 
-| Layer | Technology |
-|---|---|
-| **Framework** | Next.js 16 (App Router, Turbopack) |
-| **UI Library** | React 19 (Server & Client Components) |
-| **Language** | TypeScript 5 (Strict Mode) |
-| **Styling** | Tailwind CSS v4 |
-| **Database & Auth** | Supabase (PostgreSQL + Auth + Storage) |
-| **Validation** | Zod v4 |
-| **Typography** | Google Fonts (Madimi One & JetBrains Mono) |
+| Layer               | Technology                                 |
+| ------------------- | ------------------------------------------ |
+| **Framework**       | Next.js 16 (App Router, Turbopack)         |
+| **UI Library**      | React 19 (Server & Client Components)      |
+| **Language**        | TypeScript 5 (Strict Mode)                 |
+| **Styling**         | Tailwind CSS v4                            |
+| **Database & Auth** | Supabase (PostgreSQL + Auth + Storage)     |
+| **Validation**      | Zod v4                                     |
+| **Typography**      | Google Fonts (Madimi One & JetBrains Mono) |
 
 ---
 
@@ -109,7 +109,7 @@ NEXT_PUBLIC_SUPABASE_ANON_KEY=your-anon-public-key
 # Optional Service Role (Server operations only)
 SUPABASE_SERVICE_ROLE_KEY=your-service-role-key
 
-# Site URL for metadata & sitemaps (default fallback: https://toluodufeko.com)
+# Site URL for metadata & sitemaps (default fallback: https://toluwanimiodufeko.com)
 NEXT_PUBLIC_SITE_URL=http://localhost:3000
 ```
 
@@ -123,7 +123,9 @@ In your Supabase Dashboard SQL Editor, run the migrations in order:
 4. `supabase/migrations/004_performance_indexes.sql` (Adds optimized B-tree indexes)
 
 #### Storage Bucket Configuration
+
 Create a public storage bucket named **`portfolio-media`** in Supabase Storage:
+
 - **Bucket Name**: `portfolio-media`
 - **Public**: `true`
 - Add an RLS storage policy permitting authenticated users to upload and delete files.

@@ -25,10 +25,15 @@ export async function generateMetadata({
   if (!project) {
     return {
       title: "Project Not Found",
+      robots: {
+        index: false,
+        follow: false,
+      },
     };
   }
 
   const canonicalUrl = `/projects/${project.slug}`;
+  const ogImage = project.image || "/images/tolu-odufeko.png";
 
   return {
     title: project.title,
@@ -43,7 +48,7 @@ export async function generateMetadata({
       description: project.excerpt,
       images: [
         {
-          url: project.image,
+          url: ogImage,
           width: 1200,
           height: 630,
           alt: project.title,
@@ -54,7 +59,7 @@ export async function generateMetadata({
       card: "summary_large_image",
       title: project.title,
       description: project.excerpt,
-      images: [project.image],
+      images: [ogImage],
     },
   };
 }
@@ -72,12 +77,20 @@ export default async function ProjectDetailPage({ params }: PageProps) {
   }
 
   const canonicalUrl = `${SITE_URL}/projects/${project.slug}`;
-  const projectSchema = generateProjectSchema(project, canonicalUrl);
-  const breadcrumbSchema = generateBreadcrumbSchema([
-    { name: "Home", url: "/" },
-    { name: "Projects", url: "/projects" },
-    { name: project.title, url: `/projects/${project.slug}` },
-  ]);
+  const pageSchema = {
+    "@context": "https://schema.org",
+    "@graph": [
+      generateProjectSchema(project, canonicalUrl, false),
+      generateBreadcrumbSchema(
+        [
+          { name: "Home", url: "/" },
+          { name: "Projects", url: "/projects" },
+          { name: project.title, url: `/projects/${project.slug}` },
+        ],
+        false
+      ),
+    ],
+  };
 
   const relatedProjects = allProjects
     .filter(
@@ -91,11 +104,7 @@ export default async function ProjectDetailPage({ params }: PageProps) {
     <article className="w-full">
       <script
         type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(projectSchema) }}
-      />
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbSchema) }}
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(pageSchema) }}
       />
       {/* Hero Image Banner */}
       <div className="relative aspect-video sm:aspect-21/9 max-h-120 w-full overflow-hidden bg-neutral-200 border-b border-dark-one/15">
@@ -139,8 +148,20 @@ export default async function ProjectDetailPage({ params }: PageProps) {
               {project.title}
             </h1>
 
-            <div className="font-content mt-3 text-xs sm:text-sm text-muted">
-              {project.date}
+            <div className="font-content mt-3 flex flex-wrap items-center gap-3 text-xs sm:text-sm text-muted">
+              <span>
+                By{" "}
+                <Link
+                  href="/about"
+                  className="font-semibold text-dark-one hover:text-accent-strong underline decoration-accent decoration-2 underline-offset-4 transition-colors"
+                >
+                  Toluwanimi Odufeko
+                </Link>
+              </span>
+              <span className="text-faint" aria-hidden="true">
+                •
+              </span>
+              <span>{project.date}</span>
             </div>
 
             <div className="mt-8 space-y-6 font-content text-base sm:text-lg leading-relaxed text-muted">
@@ -203,6 +224,47 @@ export default async function ProjectDetailPage({ params }: PageProps) {
                 </li>
               ))}
             </ul>
+            {/* Creator Attribution */}
+            <div className="mt-8 border-t border-black/10 pt-6">
+              <h3 className="font-content text-xs font-bold uppercase tracking-[0.2em] text-accent-strong">
+                Built By
+              </h3>
+              <p className="mt-2 font-content text-sm font-semibold text-dark-one">
+                <Link
+                  href="/about"
+                  className="hover:text-accent-strong underline decoration-accent decoration-2 underline-offset-4 transition-colors"
+                >
+                  Toluwanimi Odufeko
+                </Link>
+              </p>
+              <p className="mt-1 font-content text-xs text-muted">
+                Electrical engineer, software builder &amp; impact leader.
+              </p>
+            </div>
+
+            {/* Project Inquiries & Navigation */}
+            <div className="mt-6 border-t border-black/10 pt-6">
+              <h3 className="font-content text-xs font-bold uppercase tracking-[0.2em] text-accent-strong">
+                Collaborate
+              </h3>
+              <p className="mt-2 font-content text-xs text-muted">
+                Interested in this project or exploring a partnership?
+              </p>
+              <div className="mt-4 flex flex-col gap-2.5">
+                <Link
+                  href="/contact"
+                  className="font-content text-xs font-semibold text-dark-one hover:text-accent-strong underline decoration-accent decoration-2 underline-offset-4 transition-colors"
+                >
+                  Discuss this project &rarr;
+                </Link>
+                <Link
+                  href="/projects"
+                  className="font-content text-xs font-semibold text-dark-one hover:text-accent-strong underline decoration-accent decoration-2 underline-offset-4 transition-colors"
+                >
+                  &larr; Back to all projects
+                </Link>
+              </div>
+            </div>
           </aside>
         </div>
       </Container>
@@ -216,7 +278,7 @@ export default async function ProjectDetailPage({ params }: PageProps) {
             </h2>
             <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
               {relatedProjects.map((p) => (
-                <ProjectCard key={p.slug} project={p} />
+                <ProjectCard key={p.slug} project={p} headingLevel="h3" />
               ))}
             </div>
           </Container>

@@ -14,9 +14,17 @@ const PAGE_SIZE = 6;
 
 interface ProjectsContentProps {
   readonly projects: Project[];
+  readonly eyebrow?: string;
+  readonly title?: string;
+  readonly subtext?: string;
 }
 
-export function ProjectsContent({ projects }: ProjectsContentProps) {
+export function ProjectsContent({
+  projects,
+  eyebrow = "Portfolio",
+  title = "Projects",
+  subtext = "Hardware and software built for the field — filter by discipline.",
+}: ProjectsContentProps) {
   const [activeFilter, setActiveFilter] = useState<FilterType>("All");
   const [visibleCount, setVisibleCount] = useState<number>(PAGE_SIZE);
 
@@ -46,13 +54,13 @@ export function ProjectsContent({ projects }: ProjectsContentProps) {
         {/* Header */}
         <div className="border-b border-dark-one/15 pb-10">
           <span className="font-content text-xs sm:text-sm font-semibold uppercase tracking-wider text-accent-strong">
-            Portfolio
+            {eyebrow}
           </span>
           <h1 className="mt-2 font-header text-4xl sm:text-5xl md:text-6xl font-bold tracking-tight text-dark-one">
-            Projects
+            {title}
           </h1>
           <p className="mt-4 max-w-xl font-content text-base sm:text-lg text-muted">
-            Hardware and software built for the field — filter by discipline.
+            {subtext}
           </p>
         </div>
 

@@ -44,15 +44,18 @@ export function SettingsForm({ settings, action }: SettingsFormProps) {
   const hintClass = "font-content text-xs text-faint mt-1";
 
   return (
-    <form onSubmit={handleSubmit} className="flex flex-col gap-8" noValidate>
+    <form onSubmit={handleSubmit} className="flex flex-col gap-6" noValidate>
       {/* ─── CV / Resume Upload Section ─── */}
-      <div className="rounded-2xl border-2 border-dark-one/10 bg-white p-4 sm:p-8 flex flex-col gap-5 sm:gap-6 shadow-xs">
+      <div className="rounded-2xl border-2 border-dark-one/10 bg-white p-4 sm:p-8 flex flex-col gap-5 shadow-xs">
         <div>
-          <h2 className="font-header text-lg sm:text-xl text-dark-one">
+          <span className="font-content text-[11px] font-bold uppercase tracking-wider text-accent-strong">
+            Profile Document
+          </span>
+          <h2 className="font-header text-lg sm:text-xl text-dark-one mt-1">
             Curriculum Vitae (CV)
           </h2>
           <p className="font-content text-xs sm:text-sm text-muted mt-1">
-            Upload your latest resume or CV. When you upload a new one, the previous file is automatically deleted from storage upon saving.
+            Upload your latest resume or CV. When you upload a new one, the previous file is automatically replaced in storage upon saving.
           </p>
         </div>
 
@@ -93,13 +96,16 @@ export function SettingsForm({ settings, action }: SettingsFormProps) {
       </div>
 
       {/* ─── Social & Contact Links Section ─── */}
-      <div className="rounded-2xl border-2 border-dark-one/10 bg-white p-4 sm:p-8 flex flex-col gap-5 sm:gap-6 shadow-xs">
+      <div className="rounded-2xl border-2 border-dark-one/10 bg-white p-4 sm:p-8 flex flex-col gap-5 shadow-xs">
         <div>
-          <h2 className="font-header text-lg sm:text-xl text-dark-one">
+          <span className="font-content text-[11px] font-bold uppercase tracking-wider text-accent-strong">
+            Online Presence
+          </span>
+          <h2 className="font-header text-lg sm:text-xl text-dark-one mt-1">
             Social &amp; Contact Links
           </h2>
           <p className="font-content text-xs sm:text-sm text-muted mt-1">
-            Manage the profile links shown in your hero, footer, and contact pages.
+            Manage the profile links displayed across your hero, footer, and contact pages.
           </p>
         </div>
 
@@ -136,17 +142,17 @@ export function SettingsForm({ settings, action }: SettingsFormProps) {
             />
           </div>
 
-          {/* Twitter / X */}
+          {/* Instagram */}
           <div className="flex flex-col gap-1.5">
-            <label htmlFor="twitterUrl" className={labelClass}>
-              Twitter / X Profile
+            <label htmlFor="instagramUrl" className={labelClass}>
+              Instagram Profile
             </label>
             <input
-              id="twitterUrl"
-              name="twitterUrl"
+              id="instagramUrl"
+              name="instagramUrl"
               type="url"
-              defaultValue={settings.twitterUrl ?? ""}
-              placeholder="https://x.com/yourusername"
+              defaultValue={settings.instagramUrl ?? settings.twitterUrl ?? ""}
+              placeholder="https://instagram.com/yourusername"
               className={inputClass}
             />
           </div>
@@ -154,15 +160,14 @@ export function SettingsForm({ settings, action }: SettingsFormProps) {
           {/* Contact Email */}
           <div className="flex flex-col gap-1.5">
             <label htmlFor="email" className={labelClass}>
-              Public Contact Email *
+              Public Contact Email
             </label>
             <input
               id="email"
               name="email"
               type="email"
-              required
-              defaultValue={settings.email}
-              placeholder="hello@example.com"
+              defaultValue={settings.email ?? ""}
+              placeholder="contact@yourdomain.com"
               className={inputClass}
             />
             <p className={hintClass}>Used for contact links and mailto triggers</p>

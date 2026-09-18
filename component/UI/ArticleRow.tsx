@@ -6,12 +6,18 @@ import type { Article } from "@/lib/data";
 export interface ArticleRowProps {
   readonly article: Article;
   readonly className?: string;
+  readonly headingLevel?: "h2" | "h3";
 }
 
-export function ArticleRow({ article, className }: ArticleRowProps) {
+export function ArticleRow({
+  article,
+  className,
+  headingLevel = "h2",
+}: ArticleRowProps) {
   const articleHref = article.link ?? `/articles/${article.slug}`;
   const isExternal =
     articleHref.startsWith("http://") || articleHref.startsWith("https://");
+  const HeadingTag = headingLevel;
 
   const rowContent = (
     <article className="grid grid-cols-1 gap-6 sm:grid-cols-[220px_minmax(0,1fr)] md:grid-cols-[280px_minmax(0,1fr)] items-center w-full min-w-0">
@@ -34,9 +40,9 @@ export function ArticleRow({ article, className }: ArticleRowProps) {
           <span>{article.readTime}</span>
         </div>
 
-        <h3 className="font-header text-xl sm:text-2xl font-bold leading-snug text-dark-one transition-colors group-hover:text-accent-strong wrap-break-word">
+        <HeadingTag className="font-header text-xl sm:text-2xl font-bold leading-snug text-dark-one transition-colors group-hover:text-accent-strong wrap-break-word">
           {article.title}
-        </h3>
+        </HeadingTag>
 
         <p className="font-content text-sm leading-relaxed text-muted wrap-break-word whitespace-normal">
           {article.excerpt}

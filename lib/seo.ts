@@ -1,12 +1,10 @@
 import type { Article, Project, SiteSettings } from "@/types";
-import { services } from "@/lib/constants";
 
 export const SITE_URL =
-  process.env.NEXT_PUBLIC_SITE_URL || "https://toluodufeko.com";
+  process.env.NEXT_PUBLIC_SITE_URL || "https://toluwanimiodufeko.com";
 
 export const PERSON_ID = `${SITE_URL}/#person`;
 export const WEBSITE_ID = `${SITE_URL}/#website`;
-export const NGO_ID = `${SITE_URL}/#donate-drive`;
 
 /**
  * Validates that essential Schema.org properties exist to avoid Google Search Console warnings.
@@ -31,13 +29,32 @@ export function validateSchema(schema: Record<string, unknown>): boolean {
 
 /**
  * Generates Root WebSite & Person Schema.
- * Combines Toluwanimi's dual identity as an Electrical & Electronics Engineer and NGO Founder.
+ * Canonical Person and WebSite entity graph.
  */
 export function generateRootSchema(settings?: SiteSettings): Record<string, unknown> {
-  const linkedin = settings?.linkedinUrl || "https://linkedin.com";
-  const github = settings?.githubUrl || "https://github.com";
-  const twitter = settings?.twitterUrl || "https://x.com";
-  const email = settings?.email ? `mailto:${settings.email}` : "mailto:hello@example.com";
+  const verifiedSameAs = [
+    settings?.linkedinUrl,
+    settings?.githubUrl,
+    settings?.instagramUrl ?? settings?.twitterUrl,
+  ].filter(
+    (url): url is string =>
+      Boolean(
+        url &&
+          url.trim().length > 0 &&
+          !url.includes("example.com") &&
+          url !== "https://linkedin.com" &&
+          url !== "https://github.com" &&
+          url !== "https://x.com" &&
+          url !== "https://instagram.com"
+      )
+  );
+
+  const email =
+    settings?.email &&
+    settings.email.trim().length > 0 &&
+    !settings.email.includes("example.com")
+      ? `mailto:${settings.email}`
+      : undefined;
 
   const rootGraph = {
     "@context": "https://schema.org",
@@ -67,12 +84,8 @@ export function generateRootSchema(settings?: SiteSettings): Record<string, unkn
         ],
         description:
           "Engineer in the energy and oil & gas sector with a B.Eng. in Electrical and Electronics Engineering, founder of Donate Drive, and builder of hardware and software systems for impact.",
-        email: email,
-        sameAs: [linkedin, github, twitter].filter(Boolean),
-        alumniOf: {
-          "@type": "EducationalOrganization",
-          name: "B.Eng. in Electrical and Electronics Engineering",
-        },
+        ...(email ? { email } : {}),
+        ...(verifiedSameAs.length > 0 ? { sameAs: verifiedSameAs } : {}),
         knowsAbout: [
           "Electrical Engineering",
           "Power Generation & Distribution",
@@ -82,28 +95,6 @@ export function generateRootSchema(settings?: SiteSettings): Record<string, unkn
           "Software Engineering",
           "Electronics Design",
         ],
-        founder: {
-          "@type": "NGO",
-          "@id": NGO_ID,
-          name: "Donate Drive",
-          url: `${SITE_URL}/about`,
-          description:
-            "An organization committed to helping children from underserved communities discover purpose and access opportunities through education, mentorship, and outreach.",
-        },
-        hasOfferCatalog: {
-          "@type": "OfferCatalog",
-          name: "Professional & Engineering Services",
-          itemListElement: services.map((service, index) => ({
-            "@type": "Offer",
-            itemOffered: {
-              "@type": "Service",
-              name: service.title,
-              description: service.description,
-              url: `${SITE_URL}${service.href}`,
-            },
-            position: index + 1,
-          })),
-        },
       },
     ],
   };
@@ -113,15 +104,16 @@ export function generateRootSchema(settings?: SiteSettings): Record<string, unkn
 }
 
 /**
- * Generates TechArticle / BlogPosting Schema for article detail pages.
+ * Generates BlogPosting Schema for article detail pages.
  */
 export function generateArticleSchema(
   article: Article,
-  canonicalUrl: string
+  canonicalUrl: string,
+  includeContext = true
 ): Record<string, unknown> {
-  const schema = {
-    "@context": "https://schema.org",
-    "@type": "TechArticle",
+  const schema: Record<string, unknown> = {
+    ...(includeContext ? { "@context": "https://schema.org" } : {}),
+    "@type": "BlogPosting",
     "@id": `${canonicalUrl}/#article`,
     headline: article.title,
     description: article.excerpt,
@@ -130,17 +122,17 @@ export function generateArticleSchema(
       ? article.image
       : `${SITE_URL}${article.image}`,
     datePublished: article.date,
-    dateModified: article.date,
     author: {
-      "@id": PERSON_ID,
       "@type": "Person",
+      "@id": PERSON_ID,
       name: "Toluwanimi Odufeko",
-      url: SITE_URL,
+      url: `${SITE_URL}/about`,
     },
     publisher: {
-      "@id": PERSON_ID,
       "@type": "Person",
+      "@id": PERSON_ID,
       name: "Toluwanimi Odufeko",
+      url: `${SITE_URL}/about`,
     },
     mainEntityOfPage: {
       "@type": "WebPage",
@@ -150,7 +142,9 @@ export function generateArticleSchema(
     inLanguage: "en-US",
   };
 
-  validateSchema(schema);
+  if (includeContext) {
+    validateSchema(schema);
+  }
   return schema;
 }
 
@@ -159,14 +153,15 @@ export function generateArticleSchema(
  */
 export function generateProjectSchema(
   project: Project,
-  canonicalUrl: string
+  canonicalUrl: string,
+  includeContext = true
 ): Record<string, unknown> {
   const isSoftware = project.categories.some((c) =>
     c.toLowerCase().includes("software")
   );
 
-  const schema = {
-    "@context": "https://schema.org",
+  const schema: Record<string, unknown> = {
+    ...(includeContext ? { "@context": "https://schema.org" } : {}),
     "@type": isSoftware ? "SoftwareApplication" : "CreativeWork",
     "@id": `${canonicalUrl}/#project`,
     name: project.title,
@@ -179,15 +174,16 @@ export function generateProjectSchema(
     dateCreated: project.date,
     datePublished: project.date,
     creator: {
-      "@id": PERSON_ID,
       "@type": "Person",
+      "@id": PERSON_ID,
       name: "Toluwanimi Odufeko",
-      url: SITE_URL,
+      url: `${SITE_URL}/about`,
     },
     author: {
-      "@id": PERSON_ID,
       "@type": "Person",
+      "@id": PERSON_ID,
       name: "Toluwanimi Odufeko",
+      url: `${SITE_URL}/about`,
     },
     keywords: [
       ...(project.categories ?? []),
@@ -202,7 +198,9 @@ export function generateProjectSchema(
     inLanguage: "en-US",
   };
 
-  validateSchema(schema);
+  if (includeContext) {
+    validateSchema(schema);
+  }
   return schema;
 }
 
@@ -210,10 +208,11 @@ export function generateProjectSchema(
  * Generates BreadcrumbList Schema for hierarchical navigation.
  */
 export function generateBreadcrumbSchema(
-  items: Array<{ name: string; url: string }>
+  items: Array<{ name: string; url: string }>,
+  includeContext = true
 ): Record<string, unknown> {
-  const schema = {
-    "@context": "https://schema.org",
+  const schema: Record<string, unknown> = {
+    ...(includeContext ? { "@context": "https://schema.org" } : {}),
     "@type": "BreadcrumbList",
     itemListElement: items.map((item, index) => ({
       "@type": "ListItem",
@@ -223,6 +222,89 @@ export function generateBreadcrumbSchema(
     })),
   };
 
+  if (includeContext) {
+    validateSchema(schema);
+  }
+  return schema;
+}
+
+/**
+ * Generates ProfilePage Schema for the /about page.
+ */
+export function generateAboutSchema(
+  canonicalUrl: string,
+  settings?: SiteSettings
+): Record<string, unknown> {
+  const schema = {
+    "@context": "https://schema.org",
+    "@type": "ProfilePage",
+    "@id": `${canonicalUrl}/#profilepage`,
+    url: canonicalUrl,
+    name: settings?.aboutTitle ?? "About Toluwanimi Odufeko",
+    description:
+      settings?.aboutSubtext ??
+      "Engineer, builder, and founder of Donate Drive working across engineering, energy, and youth mentorship.",
+    mainEntity: {
+      "@id": PERSON_ID,
+    },
+    inLanguage: "en-US",
+  };
+
   validateSchema(schema);
   return schema;
 }
+
+/**
+ * Generates ContactPage Schema with clear interaction channel.
+ */
+export function generateContactSchema(
+  canonicalUrl: string,
+  settings?: SiteSettings
+): Record<string, unknown> {
+  const schema = {
+    "@context": "https://schema.org",
+    "@type": "ContactPage",
+    "@id": `${canonicalUrl}/#contact`,
+    url: canonicalUrl,
+    name: settings?.contactTitle ?? "Contact Toluwanimi Odufeko",
+    description:
+      settings?.contactSubtext ??
+      "Get in touch for engineering consulting, hardware collaborations, speaking, or NGO partnerships.",
+    mainEntity: {
+      "@id": PERSON_ID,
+    },
+    inLanguage: "en-US",
+  };
+
+  validateSchema(schema);
+  return schema;
+}
+
+/**
+ * Generates ImageGallery / CollectionPage Schema for the gallery showcase.
+ */
+export function generateGallerySchema(
+  canonicalUrl: string,
+  itemsCount: number,
+  settings?: SiteSettings
+): Record<string, unknown> {
+  const schema = {
+    "@context": "https://schema.org",
+    "@type": "CollectionPage",
+    "@id": `${canonicalUrl}/#gallery`,
+    url: canonicalUrl,
+    name: settings?.galleryTitle ?? "Gallery | Toluwanimi Odufeko",
+    description:
+      settings?.gallerySubtext ??
+      "A visual journey through engineering field work, speaking engagements, and milestone moments.",
+    about: {
+      "@id": PERSON_ID,
+    },
+    numberOfItems: itemsCount,
+    inLanguage: "en-US",
+  };
+
+  validateSchema(schema);
+  return schema;
+}
+

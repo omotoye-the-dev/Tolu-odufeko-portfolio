@@ -6,16 +6,22 @@ import type { Article } from "@/lib/data";
 export interface ArticleCardProps {
   readonly article: Article;
   readonly className?: string;
+  readonly headingLevel?: "h2" | "h3";
 }
 
-export function ArticleCard({ article, className }: ArticleCardProps) {
+export function ArticleCard({
+  article,
+  className,
+  headingLevel = "h3",
+}: ArticleCardProps) {
   const articleHref = article.link ?? `/articles/${article.slug}`;
   const isExternal =
     articleHref.startsWith("http://") || articleHref.startsWith("https://");
+  const HeadingTag = headingLevel;
 
   const cardContent = (
     <article className="flex h-full flex-col min-w-0 w-full">
-      <div className="relative aspect-16/10 w-full overflow-hidden bg-faint/10 shrink-0">
+      <div className="relative aspect-video w-full overflow-hidden bg-faint/10 shrink-0">
         <Image
           src={article.image}
           alt={article.title}
@@ -25,7 +31,7 @@ export function ArticleCard({ article, className }: ArticleCardProps) {
         />
       </div>
 
-      <div className="flex flex-1 flex-col gap-2 p-5 sm:p-6 min-w-0 overflow-hidden">
+      <div className="flex flex-1 flex-col gap-2 p-5 sm:p-5.5 min-w-0 overflow-hidden">
         <div className="font-content flex items-center gap-2 text-xs text-muted">
           <span>{article.date}</span>
           {article.readTime && (
@@ -38,16 +44,16 @@ export function ArticleCard({ article, className }: ArticleCardProps) {
           )}
         </div>
 
-        <h3 className="font-header text-dark-one group-hover:text-accent-strong text-xl sm:text-2xl font-bold leading-snug transition-colors wrap-break-word">
+        <HeadingTag className="font-header text-dark-one group-hover:text-accent-strong text-lg sm:text-xl font-bold leading-snug transition-colors line-clamp-2 wrap-break-word">
           {article.title}
-        </h3>
+        </HeadingTag>
 
-        <p className="font-content flex-1 text-sm leading-relaxed text-muted wrap-break-word whitespace-normal">
+        <p className="font-content flex-1 text-sm leading-relaxed text-muted line-clamp-2 wrap-break-word whitespace-normal">
           {article.excerpt}
         </p>
 
         <div className="pt-3">
-          <span className="font-content text-dark-one inline-flex items-center gap-1.5 text-sm font-semibold underline decoration-accent decoration-2 underline-offset-4 transition-all duration-200 group-hover:gap-2.5 group-hover:decoration-accent-strong">
+          <span className="font-content text-dark-one inline-flex items-center gap-1.5 text-xs sm:text-sm font-semibold underline decoration-accent decoration-2 underline-offset-4 transition-all duration-200 group-hover:gap-2.5 group-hover:decoration-accent-strong">
             Read More <span aria-hidden="true">&rarr;</span>
           </span>
         </div>

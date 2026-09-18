@@ -24,10 +24,15 @@ export async function generateMetadata({
   if (!article) {
     return {
       title: "Article Not Found",
+      robots: {
+        index: false,
+        follow: false,
+      },
     };
   }
 
   const canonicalUrl = `/articles/${article.slug}`;
+  const ogImage = article.image || "/images/tolu-odufeko.png";
 
   return {
     title: article.title,
@@ -46,7 +51,7 @@ export async function generateMetadata({
       tags: [...article.tags],
       images: [
         {
-          url: article.image,
+          url: ogImage,
           width: 1200,
           height: 630,
           alt: article.title,
@@ -57,7 +62,7 @@ export async function generateMetadata({
       card: "summary_large_image",
       title: article.title,
       description: article.excerpt,
-      images: [article.image],
+      images: [ogImage],
     },
   };
 }
@@ -75,12 +80,20 @@ export default async function ArticleDetailPage({ params }: PageProps) {
   }
 
   const canonicalUrl = `${SITE_URL}/articles/${article.slug}`;
-  const articleSchema = generateArticleSchema(article, canonicalUrl);
-  const breadcrumbSchema = generateBreadcrumbSchema([
-    { name: "Home", url: "/" },
-    { name: "Articles", url: "/articles" },
-    { name: article.title, url: `/articles/${article.slug}` },
-  ]);
+  const pageSchema = {
+    "@context": "https://schema.org",
+    "@graph": [
+      generateArticleSchema(article, canonicalUrl, false),
+      generateBreadcrumbSchema(
+        [
+          { name: "Home", url: "/" },
+          { name: "Articles", url: "/articles" },
+          { name: article.title, url: `/articles/${article.slug}` },
+        ],
+        false
+      ),
+    ],
+  };
 
   const sortedArticles = [...allArticles].sort((a, b) =>
     b.date.localeCompare(a.date)
@@ -102,11 +115,7 @@ export default async function ArticleDetailPage({ params }: PageProps) {
     <article className="w-full">
       <script
         type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(articleSchema) }}
-      />
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbSchema) }}
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(pageSchema) }}
       />
       {/* Featured Banner Image */}
       <div className="relative aspect-video sm:aspect-21/9 max-h-120 w-full overflow-hidden bg-neutral-200 border-b border-dark-one/15">
@@ -149,7 +158,19 @@ export default async function ArticleDetailPage({ params }: PageProps) {
             {article.title}
           </h1>
 
-          <div className="font-content mt-4 flex items-center gap-3 text-xs sm:text-sm text-muted">
+          <div className="font-content mt-4 flex flex-wrap items-center gap-3 text-xs sm:text-sm text-muted">
+            <span>
+              By{" "}
+              <Link
+                href="/about"
+                className="font-semibold text-dark-one hover:text-accent-strong underline decoration-accent decoration-2 underline-offset-4 transition-colors"
+              >
+                Toluwanimi Odufeko
+              </Link>
+            </span>
+            <span className="text-faint" aria-hidden="true">
+              •
+            </span>
             <span>{article.date}</span>
             <span className="text-faint" aria-hidden="true">
               •
@@ -162,6 +183,50 @@ export default async function ArticleDetailPage({ params }: PageProps) {
             {article.body.map((paragraph, i) => (
               <p key={`${article.slug}-p-${i}`}>{paragraph}</p>
             ))}
+          </div>
+
+          {/* Author Attribution Card */}
+          <div className="mt-12 rounded-2xl border border-dark-one/15 bg-white/70 p-6 sm:p-8 flex flex-col sm:flex-row items-start sm:items-center gap-5 shadow-xs">
+            <div className="relative h-16 w-16 shrink-0 overflow-hidden rounded-full border-2 border-accent">
+              <Image
+                src="/images/tolu-odufeko.png"
+                alt="Portrait of Toluwanimi Odufeko"
+                fill
+                sizes="64px"
+                className="object-cover"
+              />
+            </div>
+            <div className="flex-1">
+              <span className="font-content text-xs font-semibold uppercase tracking-wider text-accent-strong">
+                Written by
+              </span>
+              <h2 className="font-header text-lg sm:text-xl font-bold text-dark-one">
+                Toluwanimi Odufeko
+              </h2>
+              <p className="font-content mt-1 text-sm leading-relaxed text-muted">
+                Electrical and electronics engineer in energy and power systems, software builder, and founder of Donate Drive.
+              </p>
+              <div className="mt-3 flex flex-wrap items-center gap-4 text-xs font-semibold">
+                <Link
+                  href="/about"
+                  className="font-content text-dark-one hover:text-accent-strong underline decoration-accent decoration-2 underline-offset-4 transition-colors"
+                >
+                  About the Author &rarr;
+                </Link>
+                <Link
+                  href="/articles"
+                  className="font-content text-dark-one hover:text-accent-strong underline decoration-accent decoration-2 underline-offset-4 transition-colors"
+                >
+                  Browse All Articles &rarr;
+                </Link>
+                <Link
+                  href="/contact"
+                  className="font-content text-dark-one hover:text-accent-strong underline decoration-accent decoration-2 underline-offset-4 transition-colors"
+                >
+                  Get in Touch &rarr;
+                </Link>
+              </div>
+            </div>
           </div>
 
           {/* Article Gallery / Visuals */}
@@ -220,6 +285,16 @@ export default async function ArticleDetailPage({ params }: PageProps) {
                 </span>
               </Link>
             )}
+          </div>
+
+          {/* Back to all articles link */}
+          <div className="mt-8 pt-6 border-t border-dark-one/10 text-center">
+            <Link
+              href="/articles"
+              className="font-content text-xs sm:text-sm font-semibold text-dark-one hover:text-accent-strong underline decoration-accent decoration-2 underline-offset-4 transition-colors"
+            >
+              &larr; Back to all articles
+            </Link>
           </div>
         </div>
       </Container>

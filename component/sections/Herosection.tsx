@@ -12,15 +12,14 @@ export async function Herosection() {
         {/* Text content */}
         <div className="flex flex-col justify-center text-left w-full lg:max-w-2xl">
           <span className="font-content font-semibold text-accent-strong uppercase tracking-wider text-xs sm:text-sm">
-            Engineer · Builder · Voice for impact
+            {settings.heroEyebrow ?? "Engineer · Builder · Voice for impact"}
           </span>
           <h1 className="pt-4 sm:pt-6 font-header text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-bold leading-tight text-dark-one">
-            Toluwanimi Odufeko
+            {settings.heroTitle ?? "Toluwanimi Odufeko"}
           </h1>
           <p className="pt-6 sm:pt-8 text-base sm:text-lg md:text-xl text-muted font-content font-normal leading-relaxed">
-            Bridging technical excellence with personal development and
-            purposeful work. Engineering, energy, and helping people become
-            better versions of themselves.
+            {settings.heroSubtext ??
+              "Bridging technical excellence with personal development and purposeful work. Engineering, energy, and helping people become better versions of themselves."}
           </p>
 
           {/* CTA Buttons */}

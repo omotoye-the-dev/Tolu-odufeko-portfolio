@@ -23,12 +23,15 @@ export interface ContactContentProps {
 }
 
 export function ContactContent({ settings }: ContactContentProps) {
+  const instagramLink = settings?.instagramUrl ?? settings?.twitterUrl;
   const socialLinks = settings
     ? [
         { label: "LinkedIn", href: settings.linkedinUrl },
         { label: "GitHub", href: settings.githubUrl },
-        ...(settings.twitterUrl ? [{ label: "Twitter / X", href: settings.twitterUrl }] : []),
-        { label: "Email", href: `mailto:${settings.email}` },
+        ...(instagramLink ? [{ label: "Instagram", href: instagramLink }] : []),
+        ...(settings.email && !settings.email.includes("example.com")
+          ? [{ label: "Email", href: `mailto:${settings.email}` }]
+          : []),
       ]
     : defaultSocials;
   const [formData, setFormData] = useState<ContactFormData>({
@@ -124,15 +127,14 @@ export function ContactContent({ settings }: ContactContentProps) {
           {/* Left Column: Information & Elsewhere */}
           <div>
             <span className="font-content text-xs sm:text-sm font-semibold uppercase tracking-wider text-accent-strong">
-              Reach Out
+              {settings?.contactEyebrow ?? "Reach Out"}
             </span>
             <h1 className="mt-2 font-header text-4xl sm:text-5xl md:text-6xl font-bold tracking-tight text-dark-one">
-              Get In Touch
+              {settings?.contactTitle ?? "Get In Touch"}
             </h1>
             <p className="mt-6 max-w-md font-content text-base sm:text-lg leading-relaxed text-muted">
-              Whether it’s a hardware problem worth solving, a collaboration, or
-              supporting Donate Drive — I read every message. Tell me what you’re
-              working on and I’ll get back to you.
+              {settings?.contactSubtext ??
+                "Whether it’s a hardware problem worth solving, a collaboration, or supporting Donate Drive — I read every message. Tell me what you’re working on and I’ll get back to you."}
             </p>
 
             <div className="mt-10 sm:mt-12 space-y-4">
@@ -217,7 +219,7 @@ export function ContactContent({ settings }: ContactContentProps) {
                     required
                     value={formData.email}
                     onChange={handleInputChange("email")}
-                    placeholder="you@example.com"
+                    placeholder="yourname@domain.com"
                     className={inputClasses(Boolean(errors.email))}
                   />
                   {errors.email && (
@@ -273,7 +275,7 @@ export function ContactContent({ settings }: ContactContentProps) {
                   )}
                 </div>
 
-                <div className="pt-2">
+                <div className="pt-2 flex flex-col gap-2.5">
                   <Button
                     type="submit"
                     variant="primary"
@@ -283,6 +285,9 @@ export function ContactContent({ settings }: ContactContentProps) {
                   >
                     {isSubmitting ? "Sending..." : "Send Message"}
                   </Button>
+                  <p className="font-content text-xs text-muted/70">
+                    Your information is kept confidential and used solely to reply to your inquiry.
+                  </p>
                 </div>
               </form>
             )}

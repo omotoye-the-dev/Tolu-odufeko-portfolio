@@ -1,17 +1,25 @@
 import Container from "@/component/UI/Container";
 import Button from "@/component/UI/Button";
 import { services } from "@/lib/constants";
+import { getSiteSettings } from "@/lib/data";
 
-export function Howtohelp() {
+export async function Howtohelp() {
+  const settings = await getSiteSettings();
+
   return (
     <section className="w-full py-12 sm:py-16">
       <Container>
         <span className="font-content text-xs sm:text-sm font-semibold uppercase tracking-wider text-accent-strong">
-          work with me
+          {settings.servicesEyebrow ?? "work with me"}
         </span>
         <h2 className="pt-2 font-header text-2xl sm:text-3xl md:text-4xl font-bold uppercase text-dark-one">
-          How Can I Help You?
+          {settings.servicesTitle ?? "How Can I Help You?"}
         </h2>
+        {settings.servicesSubtext && (
+          <p className="pt-2 font-content text-sm sm:text-base text-muted max-w-2xl">
+            {settings.servicesSubtext}
+          </p>
+        )}
 
         <div className="mt-8 grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
           {services.map((s, i) => (
@@ -44,3 +52,4 @@ export function Howtohelp() {
 }
 
 export default Howtohelp;
+

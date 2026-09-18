@@ -40,7 +40,11 @@ export const skills = [
 ];
 
 export const socials = [
-  { label: "LinkedIn", href: "https://linkedin.com" },
-  { label: "GitHub", href: "https://github.com" },
-  { label: "Email", href: "mailto:hello@example.com" },
+  {
+    label: "LinkedIn",
+    href: "https://www.linkedin.com/in/toluwanimi-odufeko-5156011b5/",
+  },
+  { label: "GitHub", href: "https://github.com/fekoh17" },
+  { label: "Instagram", href: "https://www.instagram.com/ziba.feko/" },
 ];
+

@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import type { ReactNode } from "react";
 import { JetBrains_Mono, Madimi_One } from "next/font/google";
 import ToastContainer from "@/component/UI/Toast";
+import { getSiteSettings } from "@/lib/data";
 import { SITE_URL, generateRootSchema } from "@/lib/seo";
 import "./globals.css";
 
@@ -40,8 +41,18 @@ export const metadata: Metadata = {
   authors: [{ name: "Toluwanimi Odufeko", url: SITE_URL }],
   creator: "Toluwanimi Odufeko",
   publisher: "Toluwanimi Odufeko",
+  icons: {
+    icon: [
+      { url: "/favicon.ico", sizes: "any" },
+      { url: "/logo.png", sizes: "192x192", type: "image/png" },
+    ],
+    apple: [
+      { url: "/logo.png", sizes: "180x180", type: "image/png" },
+    ],
+  },
+  manifest: "/manifest.webmanifest",
   alternates: {
-    canonical: "./",
+    canonical: "/",
   },
   openGraph: {
     type: "website",
@@ -65,7 +76,6 @@ export const metadata: Metadata = {
     title: "Toluwanimi Odufeko | Engineer, Builder, Voice for Impact",
     description:
       "Electrical engineer, software builder, and founder of Donate Drive.",
-    creator: "@toluodufeko",
     images: ["/images/tolu-odufeko.png"],
   },
   robots: {
@@ -85,8 +95,9 @@ interface RootLayoutProps {
   readonly children: ReactNode;
 }
 
-export default function RootLayout({ children }: RootLayoutProps) {
-  const rootSchema = generateRootSchema();
+export default async function RootLayout({ children }: RootLayoutProps) {
+  const settings = await getSiteSettings();
+  const rootSchema = generateRootSchema(settings);
 
   return (
     <html

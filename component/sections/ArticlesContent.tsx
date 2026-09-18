@@ -11,9 +11,17 @@ const PAGE_SIZE = 10;
 
 interface ArticlesContentProps {
   readonly articles: Article[];
+  readonly eyebrow?: string;
+  readonly title?: string;
+  readonly subtext?: string;
 }
 
-export function ArticlesContent({ articles }: ArticlesContentProps) {
+export function ArticlesContent({
+  articles,
+  eyebrow = "Writing & Thoughts",
+  title = "Articles",
+  subtext = "Notes on engineering, building an NGO, and staying useful.",
+}: ArticlesContentProps) {
   const ALL_TAGS = Array.from(new Set(articles.flatMap((a) => a.tags)));
 
   const [query, setQuery] = useState<string>("");
@@ -70,13 +78,13 @@ export function ArticlesContent({ articles }: ArticlesContentProps) {
         {/* Header */}
         <div className="border-b border-dark-one/15 pb-10">
           <span className="font-content text-xs sm:text-sm font-semibold uppercase tracking-wider text-accent-strong">
-            Writing &amp; Thoughts
+            {eyebrow}
           </span>
           <h1 className="mt-2 font-header text-4xl sm:text-5xl md:text-6xl font-bold tracking-tight text-dark-one">
-            Articles
+            {title}
           </h1>
           <p className="mt-4 max-w-xl font-content text-base sm:text-lg text-muted">
-            Notes on engineering, building an NGO, and staying useful.
+            {subtext}
           </p>
         </div>
 

@@ -7,18 +7,21 @@ export interface ProjectCardProps {
   readonly project: Project;
   readonly className?: string;
   readonly featured?: boolean;
+  readonly headingLevel?: "h2" | "h3";
 }
 
 export function ProjectCard({
   project,
   className,
   featured = false,
+  headingLevel = "h2",
 }: ProjectCardProps) {
   const projectHref = `/projects/${project.slug}`;
+  const HeadingTag = headingLevel;
 
   const cardContent = (
     <article className="flex h-full flex-col">
-      <div className="relative aspect-16/10 w-full overflow-hidden bg-faint/10">
+      <div className="relative aspect-video w-full overflow-hidden bg-faint/10">
         <Image
           src={project.image}
           alt={project.title}
@@ -28,30 +31,30 @@ export function ProjectCard({
         />
       </div>
 
-      <div className="flex flex-1 flex-col justify-between p-5 sm:p-6">
+      <div className="flex flex-1 flex-col justify-between p-5 sm:p-5.5">
         <div>
-          <div className="flex flex-wrap items-center gap-2 sm:gap-3">
+          <div className="flex flex-wrap items-center gap-2">
             {project.categories.map((category) => (
               <span
                 key={category}
-                className="font-content text-accent-strong text-xs font-bold uppercase tracking-wider"
+                className="font-content text-accent-strong text-[11px] font-bold uppercase tracking-wider"
               >
                 {category}
               </span>
             ))}
           </div>
 
-          <h3 className="font-header text-dark-one group-hover:text-accent-strong pt-3 text-xl sm:text-2xl font-bold leading-snug transition-colors">
+          <HeadingTag className="font-header text-dark-one group-hover:text-accent-strong pt-2.5 text-lg sm:text-xl font-bold leading-snug transition-colors line-clamp-2">
             {project.title}
-          </h3>
+          </HeadingTag>
 
-          <p className="font-content text-muted pt-3 text-sm leading-relaxed wrap-break-word">
+          <p className="font-content text-muted pt-2 text-sm leading-relaxed line-clamp-2 wrap-break-word">
             {project.excerpt}
           </p>
         </div>
 
-        <div className="pt-6">
-          <span className="font-content text-dark-one inline-flex items-center gap-1.5 text-sm font-semibold underline decoration-accent decoration-2 underline-offset-4 transition-all duration-200 group-hover:gap-2.5 group-hover:decoration-accent-strong">
+        <div className="pt-4 sm:pt-5">
+          <span className="font-content text-dark-one inline-flex items-center gap-1.5 text-xs sm:text-sm font-semibold underline decoration-accent decoration-2 underline-offset-4 transition-all duration-200 group-hover:gap-2.5 group-hover:decoration-accent-strong">
             View Project <span aria-hidden="true">&rarr;</span>
           </span>
         </div>

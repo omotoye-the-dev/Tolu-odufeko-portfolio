@@ -1,3 +1,4 @@
+import Link from "next/link";
 import AdminShell from "@/component/admin/AdminShell";
 import SettingsForm from "@/component/admin/SettingsForm";
 import { getSiteSettings } from "@/lib/data";
@@ -20,6 +21,27 @@ export default async function AdminSettingsPage() {
           <p className="mt-1 font-content text-xs sm:text-sm text-muted">
             Manage your CV document, social links, and public contact information.
           </p>
+        </div>
+
+        {/* Banner linking to Site Details */}
+        <div className="mb-6 flex flex-col sm:flex-row sm:items-center justify-between gap-4 rounded-xl border border-accent/40 bg-accent/10 p-4">
+          <div className="flex items-center gap-3">
+            <span className="text-xl shrink-0" aria-hidden="true">✎</span>
+            <div>
+              <p className="font-content text-xs sm:text-sm font-semibold text-dark-one">
+                Looking to edit website copy, headings, and eyebrows?
+              </p>
+              <p className="font-content text-xs text-muted">
+                Customize titles, bios, and descriptions for all pages in Site Details.
+              </p>
+            </div>
+          </div>
+          <Link
+            href="/admin/site-details"
+            className="font-content rounded-xl bg-accent px-4 py-2 text-xs font-bold text-dark-one hover:bg-dark-one hover:text-white transition-colors self-start sm:self-center shrink-0"
+          >
+            Go to Site Details &rarr;
+          </Link>
         </div>
 
         {/* Form */}

@@ -1,14 +1,27 @@
 import Link from "next/link";
 import { getSiteSettings } from "@/lib/data";
 
+const PUBLIC_NAV_LINKS = [
+  { label: "Home", href: "/" },
+  { label: "About", href: "/about" },
+  { label: "Projects", href: "/projects" },
+  { label: "Articles", href: "/articles" },
+  { label: "Gallery", href: "/gallery" },
+  { label: "Now", href: "/now" },
+  { label: "Contact", href: "/contact" },
+] as const;
+
 export async function Footer() {
   const settings = await getSiteSettings();
 
+  const instagramLink = settings.instagramUrl ?? settings.twitterUrl;
   const dynamicSocials = [
     { label: "LinkedIn", href: settings.linkedinUrl },
     { label: "GitHub", href: settings.githubUrl },
-    ...(settings.twitterUrl ? [{ label: "Twitter / X", href: settings.twitterUrl }] : []),
-    { label: "Email", href: `mailto:${settings.email}` },
+    ...(instagramLink ? [{ label: "Instagram", href: instagramLink }] : []),
+    ...(settings.email && !settings.email.includes("example.com")
+      ? [{ label: "Email", href: `mailto:${settings.email}` }]
+      : []),
   ];
 
   return (
@@ -17,6 +30,22 @@ export async function Footer() {
         <h2 className="font-header text-xl sm:text-2xl md:text-3xl font-bold tracking-wide uppercase text-dark-one">
           Build with precision. Lead with purpose.
         </h2>
+
+        {/* Public routes internal navigation */}
+        <nav aria-label="Footer navigation" className="mt-8">
+          <ul className="font-content flex flex-wrap gap-x-6 gap-y-2 text-xs sm:text-sm font-semibold text-dark-one">
+            {PUBLIC_NAV_LINKS.map((link) => (
+              <li key={link.label}>
+                <Link
+                  href={link.href}
+                  className="underline decoration-accent decoration-2 underline-offset-4 transition-colors hover:text-accent-strong"
+                >
+                  {link.label}
+                </Link>
+              </li>
+            ))}
+          </ul>
+        </nav>
 
         <div className="mt-8 flex flex-col gap-6 sm:flex-row sm:items-center sm:justify-between border-t border-dark-one/10 pt-6">
           <p className="font-content text-xs text-muted">

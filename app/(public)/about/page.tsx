@@ -1,8 +1,11 @@
 import type { Metadata } from "next";
 import Image from "next/image";
+import Link from "next/link";
 import Container from "@/component/UI/Container";
 import Button from "@/component/UI/Button";
 import { skills } from "@/lib/constants";
+import { getSiteSettings } from "@/lib/data";
+import { SITE_URL, generateAboutSchema } from "@/lib/seo";
 
 export const metadata: Metadata = {
   title: "About",
@@ -16,20 +19,35 @@ export const metadata: Metadata = {
     description:
       "Electrical engineer in energy & oil/gas, software builder, and founder of Donate Drive. Discover his story, engineering focus, and community initiatives.",
     url: "/about",
+    images: [
+      {
+        url: "/images/tolu-odufeko.png",
+        width: 1200,
+        height: 630,
+        alt: "Portrait of Toluwanimi Odufeko",
+      },
+    ],
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "About Toluwanimi Odufeko | Engineer, Builder, Voice for Impact",
+    description:
+      "Electrical engineer in energy & oil/gas, software builder, and founder of Donate Drive.",
+    images: ["/images/tolu-odufeko.png"],
   },
 };
 
 const NGO_IMAGES = [
   {
-    src: "https://images.unsplash.com/photo-1488521787991-ed7bbaae773c?w=600&h=400&fit=crop&auto=format",
+    src: "https://images.unsplash.com/photo-1488521787991-ed7bbaae773c?w=1200&h=800&fit=crop&auto=format",
     alt: "Community members receiving supplies and support",
   },
   {
-    src: "https://images.unsplash.com/photo-1497486751825-1233686d5d80?w=600&h=400&fit=crop&auto=format",
+    src: "https://images.unsplash.com/photo-1497486751825-1233686d5d80?w=1200&h=800&fit=crop&auto=format",
     alt: "Children in a classroom learning together",
   },
   {
-    src: "https://images.unsplash.com/photo-1509062522246-3755977927d7?w=600&h=400&fit=crop&auto=format",
+    src: "https://images.unsplash.com/photo-1509062522246-3755977927d7?w=1200&h=800&fit=crop&auto=format",
     alt: "Students actively collaborating on educational projects",
   },
 ] as const;
@@ -40,23 +58,29 @@ const IMPACT_STATS = [
   { value: "5 yrs", label: "Of impact" },
 ] as const;
 
-export default function AboutPage() {
+export default async function AboutPage() {
+  const settings = await getSiteSettings();
+  const aboutSchema = generateAboutSchema(`${SITE_URL}/about`, settings);
+
   return (
     <div className="w-full py-12 sm:py-16">
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(aboutSchema) }}
+      />
       <Container>
         {/* Header Hero */}
         <section className="grid grid-cols-1 items-center gap-10 border-b border-dark-one/15 pb-12 sm:pb-16 lg:grid-cols-[1fr_0.85fr]">
           <div>
             <span className="font-content text-xs sm:text-sm font-semibold uppercase tracking-wider text-accent-strong">
-              Biography
+              {settings.aboutEyebrow ?? "Biography"}
             </span>
             <h1 className="mt-2 font-header text-4xl sm:text-5xl md:text-6xl font-bold leading-tight tracking-tight text-dark-one">
-              About Me
+              {settings.aboutTitle ?? "About Me"}
             </h1>
             <p className="mt-6 max-w-xl font-content text-base sm:text-lg leading-relaxed text-muted">
-              Engineer, builder, and voice for impact — working at the
-              intersection of engineering, reliable energy, technology, and people
-              development.
+              {settings.aboutSubtext ??
+                "Engineer, builder, and voice for impact — working at the intersection of engineering, reliable energy, technology, and people development."}
             </p>
           </div>
 
@@ -73,8 +97,14 @@ export default function AboutPage() {
         </section>
 
         {/* Bio Narrative */}
-        <section className="mt-12 sm:mt-16 grid grid-cols-1 gap-12 lg:grid-cols-[1fr_320px]">
+        <section
+          aria-labelledby="about-narrative-heading"
+          className="mt-12 sm:mt-16 grid grid-cols-1 gap-12 lg:grid-cols-[1fr_320px]"
+        >
           <div className="space-y-6 font-content text-base sm:text-lg leading-relaxed text-muted">
+            <h2 id="about-narrative-heading" className="sr-only">
+              Biography & Professional Background
+            </h2>
             <p>
               I am an engineer in the oil and gas sector with a B.Eng. in
               Electrical and Electronics Engineering, driven by a passion for
@@ -115,6 +145,27 @@ export default function AboutPage() {
               simple desire: to build, to teach, to create, and to help people
               become better.
             </p>
+
+            <div className="pt-2 flex flex-wrap items-center gap-6 text-sm font-semibold">
+              <Link
+                href="/projects"
+                className="font-content text-dark-one hover:text-accent-strong underline decoration-accent decoration-2 underline-offset-4 transition-colors"
+              >
+                Explore Projects &rarr;
+              </Link>
+              <Link
+                href="/articles"
+                className="font-content text-dark-one hover:text-accent-strong underline decoration-accent decoration-2 underline-offset-4 transition-colors"
+              >
+                Read Articles &rarr;
+              </Link>
+              <Link
+                href="/contact"
+                className="font-content text-dark-one hover:text-accent-strong underline decoration-accent decoration-2 underline-offset-4 transition-colors"
+              >
+                Get in Touch &rarr;
+              </Link>
+            </div>
           </div>
 
           {/* Side Media */}
@@ -140,20 +191,17 @@ export default function AboutPage() {
         <section className="mt-16 sm:mt-24 rounded-2xl border border-accent/40 border-l-4 border-l-accent bg-white/70 p-6 sm:p-10 lg:p-12 shadow-sm">
           <div className="mb-6">
             <span className="font-content text-xs font-semibold uppercase tracking-[0.2em] text-accent-strong">
-              Donate Drive
+              {settings.aboutDonateEyebrow ?? "Donate Drive"}
             </span>
             <h2 className="mt-2 font-header text-2xl sm:text-3xl md:text-4xl font-bold text-dark-one">
-              What I&apos;m Building
+              {settings.aboutDonateTitle ?? "What I'm Building"}
             </h2>
           </div>
 
           <div className="grid grid-cols-1 gap-8 lg:grid-cols-2">
             <p className="font-content text-base sm:text-lg leading-relaxed text-muted">
-              Donate Drive is committed to helping children from underserved
-              communities discover purpose and gain access to opportunities that
-              can shape their future. Over the past five years, we have empowered
-              children through education, mentorship, scholarships, skills
-              development, and community outreach.
+              {settings.aboutDonateSubtext ??
+                "Donate Drive is committed to helping children from underserved communities discover purpose and gain access to opportunities that can shape their future. Over the past five years, we have empowered children through education, mentorship, scholarships, skills development, and community outreach."}
             </p>
 
             <div className="grid grid-cols-3 gap-4 sm:gap-6">
@@ -199,10 +247,10 @@ export default function AboutPage() {
         <section className="mt-16 sm:mt-24">
           <div className="mb-6">
             <span className="font-content text-xs font-semibold uppercase tracking-[0.2em] text-accent-strong">
-              Capabilities
+              {settings.aboutSkillsEyebrow ?? "Capabilities"}
             </span>
             <h2 className="mt-2 font-header text-2xl sm:text-3xl md:text-4xl font-bold text-dark-one">
-              Skills &amp; Expertise
+              {settings.aboutSkillsTitle ?? "Skills & Expertise"}
             </h2>
           </div>
 

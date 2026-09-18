@@ -65,7 +65,7 @@ function LoginForm() {
           type="email"
           autoComplete="email"
           required
-          placeholder="you@example.com"
+          placeholder="yourname@domain.com"
           className={inputClass}
         />
       </div>
