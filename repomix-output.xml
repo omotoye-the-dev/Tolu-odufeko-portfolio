@@ -2292,12 +2292,12 @@ export function GalleryLightbox({
 Toluwanimi Odufeko is an engineer in the energy and oil & gas sector with a Bachelor of Engineering (B.Eng.) in Electrical and Electronics Engineering. He works at the intersection of power systems, reliable energy access, hardware-software integration, and community development. He is also the founder and executive director of Donate Drive, an NGO empowering children in underserved communities across Nigeria through education, mentorship, and outreach.
 
 ## Main Navigation & Canonical Pages
-- [About & Biography](https://toluwanimiodufeko.com/about): Complete background, professional focus in energy systems, engineering capabilities, and the story of Donate Drive.
-- [Projects & Case Studies](https://toluwanimiodufeko.com/projects): Engineering installations, solar microgrid projects, embedded systems hardware, and software applications built for real-world impact.
-- [Articles & Technical Writing](https://toluwanimiodufeko.com/articles): Technical essays, engineering reflections, solar microgrids analysis, and lessons in non-profit leadership.
-- [Photo Gallery](https://toluwanimiodufeko.com/gallery): Visual documentation of field installations, speaking events, NGO outreach initiatives, and milestone achievements.
-- [What I'm Doing Now](https://toluwanimiodufeko.com/now): Current engineering priorities, active initiatives, and real-time focus areas.
-- [Contact & Consulting](https://toluwanimiodufeko.com/contact): Direct channel for engineering consulting, hardware advising, speaking engagements, and social impact partnerships.
+- [About & Biography](https://www.toluwanimiodufeko.com/about): Complete background, professional focus in energy systems, engineering capabilities, and the story of Donate Drive.
+- [Projects & Case Studies](https://www.toluwanimiodufeko.com/projects): Engineering installations, solar microgrid projects, embedded systems hardware, and software applications built for real-world impact.
+- [Articles & Technical Writing](https://www.toluwanimiodufeko.com/articles): Technical essays, engineering reflections, solar microgrids analysis, and lessons in non-profit leadership.
+- [Photo Gallery](https://www.toluwanimiodufeko.com/gallery): Visual documentation of field installations, speaking events, NGO outreach initiatives, and milestone achievements.
+- [What I'm Doing Now](https://www.toluwanimiodufeko.com/now): Current engineering priorities, active initiatives, and real-time focus areas.
+- [Contact & Consulting](https://www.toluwanimiodufeko.com/contact): Direct channel for engineering consulting, hardware advising, speaking engagements, and social impact partnerships.
 
 ## Core Capabilities & Engineering Focus
 - Power Generation and Electrical Distribution: High-reliability electrical systems design, energy efficiency optimization, and safety architecture.
@@ -2313,7 +2313,7 @@ Toluwanimi Odufeko is an engineer in the energy and oil & gas sector with a Bach
 - Non-Profit Organization: Donate Drive (Founder & Executive Director, 5+ years of active impact)
 - Verified Social Impact: 2,500+ children empowered with education and mentorship across 10+ Nigerian states
 - Services Offered: Engineering consulting, hardware design, solar power assessment, technical writing, event hosting/speaking
-- Canonical Website: https://toluwanimiodufeko.com
+- Canonical Website: https://www.toluwanimiodufeko.com
 
 ## Frequently Cited Inquiries
 ### Who is Toluwanimi Odufeko?
@@ -3998,7 +3998,7 @@ export default function NotFound() {
 import type { MetadataRoute } from "next";
 
 export default function robots(): MetadataRoute.Robots {
-  const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://toluwanimiodufeko.com";
+  const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://www.toluwanimiodufeko.com";
 
   return {
     rules: [
@@ -4052,7 +4052,7 @@ function parseSafeDate(dateStr?: string | null): Date {
 }
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
-  const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://toluwanimiodufeko.com";
+  const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://www.toluwanimiodufeko.com";
 
   const [projects, articles] = await Promise.all([
     getProjects().catch(() => []),
@@ -7670,7 +7670,7 @@ import type { Article, Project, SiteSettings } from "@/types";
 import { services } from "@/lib/constants";
 
 export const SITE_URL =
-  process.env.NEXT_PUBLIC_SITE_URL || "https://toluwanimiodufeko.com";
+  process.env.NEXT_PUBLIC_SITE_URL || "https://www.toluwanimiodufeko.com";
 
 export const PERSON_ID = `${SITE_URL}/#person`;
 export const WEBSITE_ID = `${SITE_URL}/#website`;
@@ -11747,7 +11747,7 @@ export const env = {
     process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || FALLBACK_SUPABASE_ANON_KEY,
   SUPABASE_SERVICE_ROLE_KEY: process.env.SUPABASE_SERVICE_ROLE_KEY || "",
   NEXT_PUBLIC_SITE_URL:
-    process.env.NEXT_PUBLIC_SITE_URL || "https://toluwanimiodufeko.com",
+    process.env.NEXT_PUBLIC_SITE_URL || "https://www.toluwanimiodufeko.com",
   NODE_ENV: process.env.NODE_ENV || "development",
   isProduction: process.env.NODE_ENV === "production",
   isSupabaseConfigured: Boolean(
@@ -11995,7 +11995,7 @@ NEXT_PUBLIC_SUPABASE_ANON_KEY=your-anon-public-key
 # Optional Service Role (Server operations only)
 SUPABASE_SERVICE_ROLE_KEY=your-service-role-key
 
-# Site URL for metadata & sitemaps (default fallback: https://toluwanimiodufeko.com)
+# Site URL for metadata & sitemaps (default fallback: https://www.toluwanimiodufeko.com)
 NEXT_PUBLIC_SITE_URL=http://localhost:3000
 ```
 

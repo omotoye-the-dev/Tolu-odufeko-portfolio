@@ -1,7 +1,7 @@
 import type { Article, Project, SiteSettings } from "@/types";
 
 export const SITE_URL =
-  process.env.NEXT_PUBLIC_SITE_URL || "https://toluwanimiodufeko.com";
+  process.env.NEXT_PUBLIC_SITE_URL || "https://www.toluwanimiodufeko.com";
 
 export const PERSON_ID = `${SITE_URL}/#person`;
 export const WEBSITE_ID = `${SITE_URL}/#website`;

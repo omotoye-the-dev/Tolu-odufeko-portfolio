@@ -8,8 +8,9 @@ function parseSafeDate(dateStr?: string | null): Date {
 }
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
-  const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://toluwanimiodufeko.com";
-
+const baseUrl =
+  process.env.NEXT_PUBLIC_SITE_URL ||
+  "https://www.toluwanimiodufeko.com";
   const [projects, articles] = await Promise.all([
     getProjects().catch(() => []),
     getArticles().catch(() => []),

@@ -109,7 +109,7 @@ NEXT_PUBLIC_SUPABASE_ANON_KEY=your-anon-public-key
 # Optional Service Role (Server operations only)
 SUPABASE_SERVICE_ROLE_KEY=your-service-role-key
 
-# Site URL for metadata & sitemaps (default fallback: https://toluwanimiodufeko.com)
+# Site URL for metadata & sitemaps (default fallback: https://www.toluwanimiodufeko.com)
 NEXT_PUBLIC_SITE_URL=http://localhost:3000
 ```
 
