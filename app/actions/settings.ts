@@ -16,6 +16,7 @@ const SettingsSchema = z.object({
   heroEyebrow: z.string().optional(),
   heroTitle: z.string().optional(),
   heroSubtext: z.string().optional(),
+  heroImage: z.string().optional(),
   bioEyebrow: z.string().optional(),
   bioTitle: z.string().optional(),
   bioParagraphs: z.string().optional(),
@@ -32,6 +33,8 @@ const SettingsSchema = z.object({
   aboutEyebrow: z.string().optional(),
   aboutTitle: z.string().optional(),
   aboutSubtext: z.string().optional(),
+  aboutImage: z.string().optional(),
+  aboutNgoImages: z.string().optional(),
   aboutDonateEyebrow: z.string().optional(),
   aboutDonateTitle: z.string().optional(),
   aboutDonateSubtext: z.string().optional(),
@@ -58,6 +61,19 @@ const SettingsSchema = z.object({
   galleryTitle: z.string().optional(),
   gallerySubtext: z.string().optional(),
 });
+
+function parseImagesField(value: string | undefined): string[] {
+  if (!value) return [];
+  try {
+    const parsed = JSON.parse(value);
+    if (Array.isArray(parsed)) {
+      return parsed.filter((u): u is string => typeof u === "string" && u.trim().length > 0);
+    }
+  } catch {
+    return [];
+  }
+  return [];
+}
 
 export async function updateSiteSettings(formData: FormData): Promise<void> {
   const raw = Object.fromEntries(formData.entries());
@@ -108,6 +124,7 @@ export async function updateSiteSettings(formData: FormData): Promise<void> {
   if (formData.has("heroEyebrow")) updateData.hero_eyebrow = parsed.data.heroEyebrow?.trim() || null;
   if (formData.has("heroTitle")) updateData.hero_title = parsed.data.heroTitle?.trim() || null;
   if (formData.has("heroSubtext")) updateData.hero_subtext = parsed.data.heroSubtext?.trim() || null;
+  if (formData.has("heroImage")) updateData.hero_image = parsed.data.heroImage?.trim() || "/images/tolu-odufeko.png";
   if (formData.has("bioEyebrow")) updateData.bio_eyebrow = parsed.data.bioEyebrow?.trim() || null;
   if (formData.has("bioTitle")) updateData.bio_title = parsed.data.bioTitle?.trim() || null;
   if (formData.has("bioParagraphs")) {
@@ -133,6 +150,11 @@ export async function updateSiteSettings(formData: FormData): Promise<void> {
   if (formData.has("aboutEyebrow")) updateData.about_eyebrow = parsed.data.aboutEyebrow?.trim() || null;
   if (formData.has("aboutTitle")) updateData.about_title = parsed.data.aboutTitle?.trim() || null;
   if (formData.has("aboutSubtext")) updateData.about_subtext = parsed.data.aboutSubtext?.trim() || null;
+  if (formData.has("aboutImage")) updateData.about_image = parsed.data.aboutImage?.trim() || "/images/tolu-odufeko.png";
+  if (formData.has("aboutNgoImages")) {
+    const parsedNgoImages = parseImagesField(parsed.data.aboutNgoImages);
+    updateData.about_ngo_images = parsedNgoImages.length > 0 ? parsedNgoImages : null;
+  }
   if (formData.has("aboutDonateEyebrow")) updateData.about_donate_eyebrow = parsed.data.aboutDonateEyebrow?.trim() || null;
   if (formData.has("aboutDonateTitle")) updateData.about_donate_title = parsed.data.aboutDonateTitle?.trim() || null;
   if (formData.has("aboutDonateSubtext")) updateData.about_donate_subtext = parsed.data.aboutDonateSubtext?.trim() || null;
@@ -165,6 +187,26 @@ export async function updateSiteSettings(formData: FormData): Promise<void> {
   if (formData.has("gallerySubtext")) updateData.gallery_subtext = parsed.data.gallerySubtext?.trim() || null;
 
   const { error } = await supabase.from("site_settings").upsert(updateData);
+
+  // If new columns are not yet in Supabase schema cache, retry without them to prevent breaking edits
+  if (
+    error &&
+    (error.message.includes("hero_image") ||
+      error.message.includes("about_image") ||
+      error.message.includes("about_ngo_images"))
+  ) {
+    const fallbackUpdateData = { ...updateData };
+    delete fallbackUpdateData.hero_image;
+    delete fallbackUpdateData.about_image;
+    delete fallbackUpdateData.about_ngo_images;
+    const retry = await supabase.from("site_settings").upsert(fallbackUpdateData);
+    if (retry.error) {
+      throw new Error(retry.error.message);
+    }
+    throw new Error(
+      "Text settings were saved, but your database needs migration 009. Please execute supabase/migrations/009_hero_and_about_images.sql in your Supabase SQL Editor to enable image editing."
+    );
+  }
 
   if (error) {
     throw new Error(error.message);

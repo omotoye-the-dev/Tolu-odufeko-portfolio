@@ -66,10 +66,10 @@ export function Header() {
       className={clsx(
         "sticky top-0 z-50 w-full transition-all duration-300",
         isScrolled || isMobileMenuOpen
-          ? "bg-light shadow-xs border-b border-muted/15 py-3"
-          : "bg-transparent py-4 border-b border-transparent"
+          ? "bg-footer shadow-xs border-b border-muted/15 py-3"
+          : "bg-footer py-4 border-b border-transparent"
       )}
-      style={{ backgroundColor: isScrolled || isMobileMenuOpen ? "#ffffff" : undefined }}
+      style={{ backgroundColor: isScrolled || isMobileMenuOpen ? "bg-footer" : undefined }}
     >
       <div className="mx-auto flex max-w-7xl items-center justify-between px-4 sm:px-6 md:px-10 lg:px-16">
         <div>

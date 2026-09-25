@@ -62,6 +62,14 @@ export default async function AboutPage() {
   const settings = await getSiteSettings();
   const aboutSchema = generateAboutSchema(`${SITE_URL}/about`, settings);
 
+  const ngoImages =
+    settings.aboutNgoImages && settings.aboutNgoImages.length > 0
+      ? settings.aboutNgoImages.map((src, idx) => ({
+          src,
+          alt: `Donate Drive community initiative photo ${idx + 1}`,
+        }))
+      : NGO_IMAGES;
+
   return (
     <div className="w-full py-12 sm:py-16">
       <script
@@ -86,12 +94,20 @@ export default async function AboutPage() {
 
           <div className="relative aspect-4/3 w-full overflow-hidden rounded-2xl border-2 border-accent shadow-lg">
             <Image
-              src="/images/tolu-odufeko.png"
+              src={settings.aboutImage || "/images/tolu-odufeko.png"}
               alt="Portrait of Toluwanimi Odufeko"
               fill
               priority
               sizes="(max-width: 1024px) 100vw, 50vw"
               className="object-cover"
+              unoptimized={
+                Boolean(
+                  settings.aboutImage &&
+                    settings.aboutImage.startsWith("http") &&
+                    !settings.aboutImage.includes("supabase.co") &&
+                    !settings.aboutImage.includes("images.unsplash.com")
+                )
+              }
             />
           </div>
         </section>
@@ -170,9 +186,9 @@ export default async function AboutPage() {
 
           {/* Side Media */}
           <aside className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-1 gap-4">
-            {NGO_IMAGES.slice(0, 2).map((img) => (
+            {ngoImages.slice(0, 2).map((img, idx) => (
               <div
-                key={img.src}
+                key={`${img.src}-${idx}`}
                 className="relative aspect-4/3 sm:aspect-square lg:aspect-4/3 w-full overflow-hidden rounded-2xl border border-black/15 bg-neutral-200 shadow-xs"
               >
                 <Image
@@ -181,6 +197,13 @@ export default async function AboutPage() {
                   fill
                   sizes="(max-width: 1024px) 50vw, 320px"
                   className="object-cover"
+                  unoptimized={
+                    Boolean(
+                      img.src.startsWith("http") &&
+                        !img.src.includes("supabase.co") &&
+                        !img.src.includes("images.unsplash.com")
+                    )
+                  }
                 />
               </div>
             ))}
@@ -220,9 +243,9 @@ export default async function AboutPage() {
 
           {/* NGO Gallery Grid */}
           <div className="mt-8 sm:mt-10 grid grid-cols-1 sm:grid-cols-3 gap-4">
-            {NGO_IMAGES.map((img) => (
+            {ngoImages.map((img, idx) => (
               <div
-                key={img.src}
+                key={`${img.src}-${idx}`}
                 className="relative aspect-16/10 w-full overflow-hidden rounded-xl border border-black/15 bg-neutral-200"
               >
                 <Image
@@ -231,6 +254,13 @@ export default async function AboutPage() {
                   fill
                   sizes="(max-width: 640px) 100vw, 33vw"
                   className="object-cover transition-transform duration-300 hover:scale-105"
+                  unoptimized={
+                    Boolean(
+                      img.src.startsWith("http") &&
+                        !img.src.includes("supabase.co") &&
+                        !img.src.includes("images.unsplash.com")
+                    )
+                  }
                 />
               </div>
             ))}

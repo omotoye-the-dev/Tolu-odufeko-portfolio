@@ -95,6 +95,29 @@ export function SettingsForm({ settings, action }: SettingsFormProps) {
         )}
       </div>
 
+      {/* ─── Profile / Hero Picture Upload Section ─── */}
+      <div className="rounded-2xl border-2 border-dark-one/10 bg-white p-4 sm:p-8 flex flex-col gap-5 shadow-xs">
+        <div>
+          <span className="font-content text-[11px] font-bold uppercase tracking-wider text-accent-strong">
+            Profile Picture
+          </span>
+          <h2 className="font-header text-lg sm:text-xl text-dark-one mt-1">
+            Hero Profile Image
+          </h2>
+          <p className="font-content text-xs sm:text-sm text-muted mt-1">
+            Upload your portrait photo for the homepage hero section. You can also edit this alongside headings in Site Details.
+          </p>
+        </div>
+
+        <ImageUpload
+          defaultValue={settings.heroImage ?? "/images/tolu-odufeko.png"}
+          name="heroImage"
+          folder="media"
+          label="Hero Profile Picture"
+          hint="PNG, JPG, or WebP portrait image (recommended square or 4:5 ratio)"
+        />
+      </div>
+
       {/* ─── Social & Contact Links Section ─── */}
       <div className="rounded-2xl border-2 border-dark-one/10 bg-white p-4 sm:p-8 flex flex-col gap-5 shadow-xs">
         <div>

@@ -3,6 +3,8 @@
 import { useState, useTransition } from "react";
 import { clsx } from "clsx";
 import Button from "@/component/UI/Button";
+import ImageUpload from "@/component/admin/ImageUpload";
+import MultiImageUpload from "@/component/admin/MultiImageUpload";
 import { toast } from "@/hooks/useToast";
 import type { SiteSettings } from "@/lib/data";
 
@@ -160,6 +162,19 @@ export function SiteDetailsForm({ settings, action }: SiteDetailsFormProps) {
               }
               placeholder="Enter hero intro subtext…"
               className={textareaClass}
+            />
+          </div>
+
+          <div className="flex flex-col gap-1.5 pt-2 border-t border-dark-one/10">
+            <label className={labelClass}>
+              Hero Profile Image
+            </label>
+            <ImageUpload
+              defaultValue={settings.heroImage ?? "/images/tolu-odufeko.png"}
+              name="heroImage"
+              folder="media"
+              label="Hero Portrait / Avatar Image"
+              hint="Upload or paste a URL for the profile portrait displayed in the homepage hero section (PNG, JPG, WebP)."
             />
           </div>
         </div>
@@ -472,6 +487,19 @@ export function SiteDetailsForm({ settings, action }: SiteDetailsFormProps) {
               className={textareaClass}
             />
           </div>
+
+          <div className="flex flex-col gap-1.5 pt-2 border-t border-dark-one/10">
+            <label className={labelClass}>
+              About Page Portrait Image
+            </label>
+            <ImageUpload
+              defaultValue={settings.aboutImage ?? "/images/tolu-odufeko.png"}
+              name="aboutImage"
+              folder="media"
+              label="About Portrait Image"
+              hint="Upload or paste a URL for the main biography portrait displayed at the top of /about (PNG, JPG, WebP)."
+            />
+          </div>
         </div>
 
         {/* Donate Drive Section on About */}
@@ -532,6 +560,25 @@ export function SiteDetailsForm({ settings, action }: SiteDetailsFormProps) {
               }
               placeholder="Enter Donate Drive description…"
               className={textareaClass}
+            />
+          </div>
+
+          <div className="flex flex-col gap-1.5 pt-2 border-t border-dark-one/10">
+            <label className={labelClass}>
+              About Page Community / NGO Images
+            </label>
+            <MultiImageUpload
+              defaultValues={
+                settings.aboutNgoImages ?? [
+                  "https://images.unsplash.com/photo-1488521787991-ed7bbaae773c?w=1200&h=800&fit=crop&auto=format",
+                  "https://images.unsplash.com/photo-1497486751825-1233686d5d80?w=1200&h=800&fit=crop&auto=format",
+                  "https://images.unsplash.com/photo-1509062522246-3755977927d7?w=1200&h=800&fit=crop&auto=format",
+                ]
+              }
+              name="aboutNgoImages"
+              folder="media"
+              label="Donate Drive & Impact Gallery Images"
+              hint="These images appear in the About page narrative sidebar (first 2) and in the Donate Drive impact gallery (all images)."
             />
           </div>
         </div>

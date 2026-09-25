@@ -48,12 +48,20 @@ export async function Herosection() {
         <div className="w-full max-w-80 sm:max-w-100 lg:max-w-115 shrink-0">
           <div className="relative aspect-square w-full rounded-2xl border-r-4 border-b-4 border-accent overflow-hidden shadow-xl transition-transform duration-300 hover:-translate-x-1 hover:-translate-y-1">
             <Image
-              src="/images/tolu-odufeko.png"
+              src={settings.heroImage || "/images/tolu-odufeko.png"}
               alt="Portrait of Toluwanimi Odufeko"
               fill
               priority
               sizes="(max-width: 640px) 320px, (max-width: 1024px) 400px, 460px"
               className="object-cover"
+              unoptimized={
+                Boolean(
+                  settings.heroImage &&
+                    settings.heroImage.startsWith("http") &&
+                    !settings.heroImage.includes("supabase.co") &&
+                    !settings.heroImage.includes("images.unsplash.com")
+                )
+              }
             />
           </div>
         </div>

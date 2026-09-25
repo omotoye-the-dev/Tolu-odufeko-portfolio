@@ -52,6 +52,7 @@ export interface SiteSettings {
   readonly heroEyebrow?: string;
   readonly heroTitle?: string;
   readonly heroSubtext?: string;
+  readonly heroImage?: string;
   readonly bioEyebrow?: string;
   readonly bioTitle?: string;
   readonly bioParagraphs?: readonly string[];
@@ -68,6 +69,8 @@ export interface SiteSettings {
   readonly aboutEyebrow?: string;
   readonly aboutTitle?: string;
   readonly aboutSubtext?: string;
+  readonly aboutImage?: string;
+  readonly aboutNgoImages?: readonly string[];
   readonly aboutDonateEyebrow?: string;
   readonly aboutDonateTitle?: string;
   readonly aboutDonateSubtext?: string;

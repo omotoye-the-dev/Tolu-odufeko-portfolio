@@ -254,6 +254,7 @@ interface SiteSettingsRow {
   hero_eyebrow?: string | null;
   hero_title?: string | null;
   hero_subtext?: string | null;
+  hero_image?: string | null;
   bio_eyebrow?: string | null;
   bio_title?: string | null;
   bio_paragraphs?: string[] | null;
@@ -270,6 +271,8 @@ interface SiteSettingsRow {
   about_eyebrow?: string | null;
   about_title?: string | null;
   about_subtext?: string | null;
+  about_image?: string | null;
+  about_ngo_images?: string[] | null;
   about_donate_eyebrow?: string | null;
   about_donate_title?: string | null;
   about_donate_subtext?: string | null;
@@ -303,6 +306,12 @@ const DEFAULT_BIO_PARAGRAPHS = [
   "At the core of everything I do is a simple desire: to build, to teach, to create, and to help people become better.",
 ] as const;
 
+export const DEFAULT_ABOUT_NGO_IMAGES = [
+  "https://images.unsplash.com/photo-1488521787991-ed7bbaae773c?w=1200&h=800&fit=crop&auto=format",
+  "https://images.unsplash.com/photo-1497486751825-1233686d5d80?w=1200&h=800&fit=crop&auto=format",
+  "https://images.unsplash.com/photo-1509062522246-3755977927d7?w=1200&h=800&fit=crop&auto=format",
+] as const;
+
 function mapSiteSettings(row: SiteSettingsRow): SiteSettings {
   const instagram = row.instagram_url || row.twitter_url || null;
   const safeEmail =
@@ -327,6 +336,7 @@ function mapSiteSettings(row: SiteSettingsRow): SiteSettings {
     heroSubtext:
       row.hero_subtext ||
       "Bridging technical excellence with personal development and purposeful work. Engineering, energy, and helping people become better versions of themselves.",
+    heroImage: row.hero_image || "/images/tolu-odufeko.png",
     bioEyebrow: row.bio_eyebrow || "About Me",
     bioTitle:
       row.bio_title || "Building Systems, Solving Problems & Empowering Lives",
@@ -354,6 +364,11 @@ function mapSiteSettings(row: SiteSettingsRow): SiteSettings {
     aboutSubtext:
       row.about_subtext ||
       "Engineer, builder, and voice for impact — working at the intersection of engineering, reliable energy, technology, and people development.",
+    aboutImage: row.about_image || "/images/tolu-odufeko.png",
+    aboutNgoImages:
+      Array.isArray(row.about_ngo_images) && row.about_ngo_images.length > 0
+        ? row.about_ngo_images
+        : DEFAULT_ABOUT_NGO_IMAGES,
     aboutDonateEyebrow: row.about_donate_eyebrow || "Donate Drive",
     aboutDonateTitle: row.about_donate_title || "What I'm Building",
     aboutDonateSubtext:
@@ -402,6 +417,7 @@ export async function getSiteSettings(): Promise<SiteSettings> {
     heroTitle: "Toluwanimi Odufeko",
     heroSubtext:
       "Bridging technical excellence with personal development and purposeful work. Engineering, energy, and helping people become better versions of themselves.",
+    heroImage: "/images/tolu-odufeko.png",
     bioEyebrow: "About Me",
     bioTitle: "Building Systems, Solving Problems & Empowering Lives",
     bioParagraphs: DEFAULT_BIO_PARAGRAPHS,
@@ -421,6 +437,8 @@ export async function getSiteSettings(): Promise<SiteSettings> {
     aboutTitle: "About Me",
     aboutSubtext:
       "Engineer, builder, and voice for impact — working at the intersection of engineering, reliable energy, technology, and people development.",
+    aboutImage: "/images/tolu-odufeko.png",
+    aboutNgoImages: DEFAULT_ABOUT_NGO_IMAGES,
     aboutDonateEyebrow: "Donate Drive",
     aboutDonateTitle: "What I'm Building",
     aboutDonateSubtext:
