@@ -250,7 +250,6 @@ interface SiteSettingsRow {
   linkedin_url: string;
   instagram_url?: string | null;
   twitter_url?: string | null;
-  email?: string | null;
   hero_eyebrow?: string | null;
   hero_title?: string | null;
   hero_subtext?: string | null;
@@ -314,12 +313,6 @@ export const DEFAULT_ABOUT_NGO_IMAGES = [
 
 function mapSiteSettings(row: SiteSettingsRow): SiteSettings {
   const instagram = row.instagram_url || row.twitter_url || null;
-  const safeEmail =
-    row.email &&
-    row.email.trim().length > 0 &&
-    !row.email.includes("example.com")
-      ? row.email.trim()
-      : null;
 
   return {
     id: row.id,
@@ -330,7 +323,6 @@ function mapSiteSettings(row: SiteSettingsRow): SiteSettings {
       "https://www.linkedin.com/in/toluwanimi-odufeko-5156011b5/",
     instagramUrl: instagram,
     twitterUrl: row.twitter_url || instagram || null,
-    email: safeEmail,
     heroEyebrow: row.hero_eyebrow || "Engineer · Builder · Voice for impact",
     heroTitle: row.hero_title || "Toluwanimi Odufeko",
     heroSubtext:
@@ -412,7 +404,6 @@ export async function getSiteSettings(): Promise<SiteSettings> {
     linkedinUrl: "https://www.linkedin.com/in/toluwanimi-odufeko-5156011b5/",
     instagramUrl: "https://www.instagram.com/ziba.feko/",
     twitterUrl: "https://www.instagram.com/ziba.feko/",
-    email: null,
     heroEyebrow: "Engineer · Builder · Voice for impact",
     heroTitle: "Toluwanimi Odufeko",
     heroSubtext:

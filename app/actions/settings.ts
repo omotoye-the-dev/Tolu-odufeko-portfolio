@@ -12,7 +12,6 @@ const SettingsSchema = z.object({
   linkedinUrl: z.string().url("LinkedIn must be a valid URL").optional(),
   instagramUrl: z.string().url("Instagram must be a valid URL").or(z.literal("")).optional(),
   twitterUrl: z.string().url("Twitter/X must be a valid URL").or(z.literal("")).optional(),
-  email: z.string().email("Please provide a valid email address").or(z.literal("")).optional(),
   heroEyebrow: z.string().optional(),
   heroTitle: z.string().optional(),
   heroSubtext: z.string().optional(),
@@ -116,9 +115,6 @@ export async function updateSiteSettings(formData: FormData): Promise<void> {
     updateData.twitter_url = ig;
   } else if (formData.has("twitterUrl")) {
     updateData.twitter_url = parsed.data.twitterUrl || null;
-  }
-  if (formData.has("email")) {
-    updateData.email = parsed.data.email ? parsed.data.email.trim() : "";
   }
 
   if (formData.has("heroEyebrow")) updateData.hero_eyebrow = parsed.data.heroEyebrow?.trim() || null;

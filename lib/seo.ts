@@ -49,13 +49,6 @@ export function generateRootSchema(settings?: SiteSettings): Record<string, unkn
       )
   );
 
-  const email =
-    settings?.email &&
-    settings.email.trim().length > 0 &&
-    !settings.email.includes("example.com")
-      ? `mailto:${settings.email}`
-      : undefined;
-
   const rootGraph = {
     "@context": "https://schema.org",
     "@graph": [
@@ -84,7 +77,6 @@ export function generateRootSchema(settings?: SiteSettings): Record<string, unkn
         ],
         description:
           "Engineer in the energy and oil & gas sector with a B.Eng. in Electrical and Electronics Engineering, founder of Donate Drive, and builder of hardware and software systems for impact.",
-        ...(email ? { email } : {}),
         ...(verifiedSameAs.length > 0 ? { sameAs: verifiedSameAs } : {}),
         knowsAbout: [
           "Electrical Engineering",

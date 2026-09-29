@@ -7,6 +7,7 @@ import Container from "@/component/UI/Container";
 import Button from "@/component/UI/Button";
 import { socials as defaultSocials } from "@/lib/constants";
 import { toast } from "@/hooks/useToast";
+import { sendContactMessage } from "@/app/actions/contact";
 import type { SiteSettings } from "@/lib/data";
 
 interface ContactFormData {
@@ -29,9 +30,6 @@ export function ContactContent({ settings }: ContactContentProps) {
         { label: "LinkedIn", href: settings.linkedinUrl },
         { label: "GitHub", href: settings.githubUrl },
         ...(instagramLink ? [{ label: "Instagram", href: instagramLink }] : []),
-        ...(settings.email && !settings.email.includes("example.com")
-          ? [{ label: "Email", href: `mailto:${settings.email}` }]
-          : []),
       ]
     : defaultSocials;
   const [formData, setFormData] = useState<ContactFormData>({
@@ -79,21 +77,35 @@ export function ContactContent({ settings }: ContactContentProps) {
     return nextErrors;
   };
 
-  const handleSubmit = (e: React.FormEvent): void => {
+  const handleSubmit = async (e: React.FormEvent): Promise<void> => {
     e.preventDefault();
     const validationErrors = validateForm();
     setErrors(validationErrors);
 
     if (Object.keys(validationErrors).length === 0) {
       setIsSubmitting(true);
-      // Simulate form submission latency
-      setTimeout(() => {
-        setIsSubmitting(false);
-        setIsSubmitted(true);
-        toast.success("Message Delivered Successfully!", {
-          description: `Thank you, ${formData.name.split(" ")[0] || "friend"}. I've received your note and will reply soon.`,
+      try {
+        const result = await sendContactMessage(formData);
+        if (result.success) {
+          setIsSubmitted(true);
+          toast.success("Message Delivered Successfully!", {
+            description: `Thank you, ${formData.name.split(" ")[0] || "friend"}. I've received your note and will reply soon.`,
+          });
+        } else {
+          toast.error("Message Failed to Send", {
+            description:
+              result.error ||
+              "Please check your connection or try again in a moment.",
+          });
+        }
+      } catch {
+        toast.error("Message Delivery Error", {
+          description:
+            "Something went wrong while delivering your message. Please try again.",
         });
-      }, 500);
+      } finally {
+        setIsSubmitting(false);
+      }
     } else {
       toast.warning("Incomplete Message Details", {
         description: "Please check the highlighted fields and fix any missing information.",

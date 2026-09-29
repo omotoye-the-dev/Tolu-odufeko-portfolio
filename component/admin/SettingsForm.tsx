@@ -179,22 +179,6 @@ export function SettingsForm({ settings, action }: SettingsFormProps) {
               className={inputClass}
             />
           </div>
-
-          {/* Contact Email */}
-          <div className="flex flex-col gap-1.5">
-            <label htmlFor="email" className={labelClass}>
-              Public Contact Email
-            </label>
-            <input
-              id="email"
-              name="email"
-              type="email"
-              defaultValue={settings.email ?? ""}
-              placeholder="contact@yourdomain.com"
-              className={inputClass}
-            />
-            <p className={hintClass}>Used for contact links and mailto triggers</p>
-          </div>
         </div>
       </div>
 

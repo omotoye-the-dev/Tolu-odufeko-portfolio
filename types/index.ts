@@ -47,7 +47,6 @@ export interface SiteSettings {
   readonly linkedinUrl: string;
   readonly instagramUrl: string | null;
   readonly twitterUrl?: string | null;
-  readonly email: string | null;
   // Dynamic Section Content - Home
   readonly heroEyebrow?: string;
   readonly heroTitle?: string;

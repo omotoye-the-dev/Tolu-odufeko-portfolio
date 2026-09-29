@@ -19,9 +19,6 @@ export async function Footer() {
     { label: "LinkedIn", href: settings.linkedinUrl },
     { label: "GitHub", href: settings.githubUrl },
     ...(instagramLink ? [{ label: "Instagram", href: instagramLink }] : []),
-    ...(settings.email && !settings.email.includes("example.com")
-      ? [{ label: "Email", href: `mailto:${settings.email}` }]
-      : []),
   ];
 
   return (
