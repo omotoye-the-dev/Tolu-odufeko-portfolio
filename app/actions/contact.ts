@@ -24,6 +24,7 @@ const ContactSchema = z.object({
     .trim()
     .min(10, "Message should be at least 10 characters.")
     .max(5000, "Message cannot exceed 5000 characters."),
+  category: z.enum(["general", "donate_drive"]).default("general"),
 });
 
 export type ContactFormData = z.infer<typeof ContactSchema>;
@@ -64,8 +65,15 @@ export async function sendContactMessage(
     };
   }
 
-  const receiverEmail =
-    process.env.CONTACT_RECEIVER_EMAIL?.trim() || "isrealdufeks@gmail.com";
+  const isDonateDrive = parsed.data.category === "donate_drive";
+
+  // Dedicated routing based on inquiry category
+  const receiverEmail = isDonateDrive
+    ? process.env.DONATE_DRIVE_RECEIVER_EMAIL?.trim() ||
+      "odufeko.hephzibah@donate-drive.org"
+    : process.env.CONTACT_RECEIVER_EMAIL?.trim() ||
+      "isrealdufeks@gmail.com";
+
   const senderEmail =
     process.env.CONTACT_SENDER_EMAIL?.trim() ||
     "Portfolio Contact <onboarding@resend.dev>";
@@ -80,16 +88,31 @@ export async function sendContactMessage(
     const sanitizedMessage = escapeHtml(message).replace(/\n/g, "<br/>");
     const submittedAt = new Date().toUTCString();
 
+    const emailSubject = isDonateDrive
+      ? `[Donate Drive Inquiry] ${subject} - ${name}`
+      : `[Portfolio Inquiry] ${subject} - ${name}`;
+
+    const bannerTitle = isDonateDrive
+      ? "New Message for Donate Drive Foundation"
+      : "New Message from Portfolio Website";
+
+    const categoryBadge = isDonateDrive
+      ? "Donate Drive Foundation"
+      : "General & Engineering";
+
     const { error } = await resend.emails.send({
       from: senderEmail,
       to: [receiverEmail],
       replyTo: email,
-      subject: `[Portfolio] ${subject} - ${name}`,
-      text: `New Portfolio Message\n\nFrom: ${name} (${email})\nSubject: ${subject}\nDate: ${submittedAt}\n\nMessage:\n${message}`,
+      subject: emailSubject,
+      text: `${bannerTitle}\n\nType: ${categoryBadge}\nFrom: ${name} (${email})\nSubject: ${subject}\nDate: ${submittedAt}\n\nMessage:\n${message}`,
       html: `
         <div style="font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 24px; border: 1px solid #e5e7eb; border-radius: 12px; background-color: #ffffff;">
           <div style="border-bottom: 2px solid #1a202c; padding-bottom: 12px; margin-bottom: 20px;">
-            <h2 style="margin: 0; color: #1a202c; font-size: 20px;">New Message from Portfolio Website</h2>
+            <div style="display: inline-block; background-color: ${isDonateDrive ? "#fef3c7" : "#e0f2fe"}; color: ${isDonateDrive ? "#92400e" : "#0369a1"}; font-size: 11px; font-weight: 700; text-transform: uppercase; padding: 4px 8px; border-radius: 4px; margin-bottom: 8px;">
+              ${categoryBadge}
+            </div>
+            <h2 style="margin: 0; color: #1a202c; font-size: 20px;">${bannerTitle}</h2>
             <p style="margin: 4px 0 0 0; color: #718096; font-size: 13px;">Received: ${submittedAt}</p>
           </div>
 

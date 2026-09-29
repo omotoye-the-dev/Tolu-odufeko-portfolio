@@ -10,6 +10,8 @@ import { toast } from "@/hooks/useToast";
 import { sendContactMessage } from "@/app/actions/contact";
 import type { SiteSettings } from "@/lib/data";
 
+type InquiryCategory = "general" | "donate_drive";
+
 interface ContactFormData {
   name: string;
   email: string;
@@ -32,6 +34,8 @@ export function ContactContent({ settings }: ContactContentProps) {
         ...(instagramLink ? [{ label: "Instagram", href: instagramLink }] : []),
       ]
     : defaultSocials;
+
+  const [category, setCategory] = useState<InquiryCategory>("general");
   const [formData, setFormData] = useState<ContactFormData>({
     name: "",
     email: "",
@@ -42,6 +46,11 @@ export function ContactContent({ settings }: ContactContentProps) {
   const [errors, setErrors] = useState<FormErrors>({});
   const [isSubmitted, setIsSubmitted] = useState<boolean>(false);
   const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
+
+  const handleCategoryChange = (newCategory: InquiryCategory): void => {
+    setCategory(newCategory);
+    setErrors({});
+  };
 
   const handleInputChange = (
     field: keyof ContactFormData
@@ -85,11 +94,20 @@ export function ContactContent({ settings }: ContactContentProps) {
     if (Object.keys(validationErrors).length === 0) {
       setIsSubmitting(true);
       try {
-        const result = await sendContactMessage(formData);
+        const result = await sendContactMessage({
+          ...formData,
+          category,
+        });
+
         if (result.success) {
           setIsSubmitted(true);
+          const recipientNotice =
+            category === "donate_drive"
+              ? "Your inquiry has been sent to the Donate Drive team."
+              : "I've received your note and will reply soon.";
+
           toast.success("Message Delivered Successfully!", {
-            description: `Thank you, ${formData.name.split(" ")[0] || "friend"}. I've received your note and will reply soon.`,
+            description: `Thank you, ${formData.name.split(" ")[0] || "friend"}. ${recipientNotice}`,
           });
         } else {
           toast.error("Message Failed to Send", {
@@ -146,7 +164,7 @@ export function ContactContent({ settings }: ContactContentProps) {
             </h1>
             <p className="mt-6 max-w-md font-content text-base sm:text-lg leading-relaxed text-muted">
               {settings?.contactSubtext ??
-                "Whether it’s a hardware problem worth solving, a collaboration, or supporting Donate Drive — I read every message. Tell me what you’re working on and I’ll get back to you."}
+                "Whether it’s a hardware problem worth solving, an engineering collaboration, or supporting Donate Drive — I read every message. Tell me what you’re working on and I’ll get back to you."}
             </p>
 
             <div className="mt-10 sm:mt-12 space-y-4">
@@ -169,7 +187,7 @@ export function ContactContent({ settings }: ContactContentProps) {
             </div>
           </div>
 
-          {/* Right Column: Contact Form */}
+          {/* Right Column: Contact Form with Segmented Inquiry Switcher */}
           <div className="rounded-2xl border border-dark-one/15 bg-white/80 p-6 sm:p-10 shadow-sm backdrop-blur-xs">
             {isSubmitted ? (
               <div className="flex flex-col items-start justify-center py-6 text-left animate-in fade-in duration-300">
@@ -177,11 +195,14 @@ export function ContactContent({ settings }: ContactContentProps) {
                   ✓
                 </div>
                 <h2 className="font-header mt-6 text-2xl sm:text-3xl font-bold text-dark-one">
-                  Message sent successfully!
+                  {category === "donate_drive"
+                    ? "Inquiry sent to Donate Drive!"
+                    : "Message sent successfully!"}
                 </h2>
                 <p className="font-content mt-3 text-base text-muted">
-                  Thanks, {formData.name.split(" ")[0] || "there"}. I appreciate
-                  you reaching out and will be in touch soon.
+                  {category === "donate_drive"
+                    ? `Thank you, ${formData.name.split(" ")[0] || "there"}. Your message has been forwarded to the Donate Drive foundation team. We will be in touch shortly.`
+                    : `Thanks, ${formData.name.split(" ")[0] || "there"}. I appreciate you reaching out and will be in touch soon.`}
                 </p>
                 <div className="mt-8">
                   <Button
@@ -195,6 +216,52 @@ export function ContactContent({ settings }: ContactContentProps) {
               </div>
             ) : (
               <form onSubmit={handleSubmit} noValidate className="space-y-5">
+                {/* Segmented Inquiry Switcher */}
+                <div>
+                  <label className="font-content mb-2 block text-xs font-bold uppercase tracking-wider text-muted">
+                    Select Inquiry Type
+                  </label>
+                  <div
+                    role="tablist"
+                    aria-label="Inquiry category"
+                    className="grid grid-cols-2 p-1 bg-dark-one/5 rounded-xl gap-1 border border-dark-one/10"
+                  >
+                    <button
+                      type="button"
+                      role="tab"
+                      aria-selected={category === "general"}
+                      onClick={() => handleCategoryChange("general")}
+                      className={clsx(
+                        "font-content py-2.5 px-3 rounded-lg text-xs sm:text-sm font-semibold transition-all duration-200 text-center cursor-pointer",
+                        category === "general"
+                          ? "bg-white text-dark-one shadow-xs font-bold"
+                          : "text-muted hover:text-dark-one"
+                      )}
+                    >
+                      General & Engineering
+                    </button>
+                    <button
+                      type="button"
+                      role="tab"
+                      aria-selected={category === "donate_drive"}
+                      onClick={() => handleCategoryChange("donate_drive")}
+                      className={clsx(
+                        "font-content py-2.5 px-3 rounded-lg text-xs sm:text-sm font-semibold transition-all duration-200 text-center cursor-pointer",
+                        category === "donate_drive"
+                          ? "bg-white text-dark-one shadow-xs font-bold"
+                          : "text-muted hover:text-dark-one"
+                      )}
+                    >
+                      Donate Drive
+                    </button>
+                  </div>
+                  <p className="font-content mt-2 text-xs text-muted">
+                    {category === "general"
+                      ? "Direct message for engineering consulting, hardware projects, or partnerships."
+                      : "Direct message to the Donate Drive team for mentorship, school drives, and sponsorships."}
+                  </p>
+                </div>
+
                 <div>
                   <label
                     htmlFor="contact-name"
@@ -254,7 +321,11 @@ export function ContactContent({ settings }: ContactContentProps) {
                     required
                     value={formData.subject}
                     onChange={handleInputChange("subject")}
-                    placeholder="What's this about?"
+                    placeholder={
+                      category === "donate_drive"
+                        ? "e.g. School Drive Sponsorship / Mentorship"
+                        : "e.g. Hardware Consultation / Build Partnership"
+                    }
                     className={inputClasses(Boolean(errors.subject))}
                   />
                   {errors.subject && (
@@ -277,7 +348,11 @@ export function ContactContent({ settings }: ContactContentProps) {
                     required
                     value={formData.message}
                     onChange={handleInputChange("message")}
-                    placeholder="Tell me about your project, initiative, or idea…"
+                    placeholder={
+                      category === "donate_drive"
+                        ? "Tell us how you would like to collaborate, volunteer, or support Donate Drive…"
+                        : "Tell me about your project, initiative, or idea…"
+                    }
                     className={inputClasses(Boolean(errors.message))}
                   />
                   {errors.message && (
@@ -295,10 +370,14 @@ export function ContactContent({ settings }: ContactContentProps) {
                     disabled={isSubmitting}
                     className="w-full sm:w-auto"
                   >
-                    {isSubmitting ? "Sending..." : "Send Message"}
+                    {isSubmitting
+                      ? "Sending..."
+                      : category === "donate_drive"
+                      ? "Send to Donate Drive"
+                      : "Send Message"}
                   </Button>
                   <p className="font-content text-xs text-muted/70">
-                    Your information is kept confidential and used solely to reply to your inquiry.
+                    Your information is kept confidential and will only be used to respond to your inquiry.
                   </p>
                 </div>
               </form>
