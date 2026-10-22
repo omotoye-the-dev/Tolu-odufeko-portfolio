@@ -1,14 +1,19 @@
-import { getArticles, getSiteSettings } from "@/lib/data";
+import { getArticles, getFeaturedArticles, getSiteSettings } from "@/lib/data";
 import Container from "@/component/UI/Container";
 import ArticleCard from "@/component/UI/ArticleCard";
 import Button from "@/component/UI/Button";
 
 export async function Latestarticlesection() {
-  const [allArticles, settings] = await Promise.all([
+  const [featuredArticles, allArticles, settings] = await Promise.all([
+    getFeaturedArticles(),
     getArticles(),
     getSiteSettings(),
   ]);
-  const latestArticles = allArticles.slice(0, 3);
+
+  // Prioritize featured articles, backfilling up to 3 with latest articles
+  const featuredSlugs = new Set(featuredArticles.map((a) => a.slug));
+  const remainingArticles = allArticles.filter((a) => !featuredSlugs.has(a.slug));
+  const displayArticles = [...featuredArticles, ...remainingArticles].slice(0, 3);
 
   return (
     <section className="w-full py-12 sm:py-16">
@@ -26,7 +31,7 @@ export async function Latestarticlesection() {
         )}
 
         <div className="pt-8 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 max-w-7xl">
-          {latestArticles.map((article) => (
+          {displayArticles.map((article) => (
             <ArticleCard className="shadow-md" key={article.slug} article={article} />
           ))}
         </div>

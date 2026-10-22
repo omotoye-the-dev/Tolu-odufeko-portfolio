@@ -21,7 +21,7 @@ export default async function AdminArticlesPage() {
               Articles
             </h1>
             <p className="mt-1 font-content text-xs sm:text-sm text-muted">
-              {articles.length} published
+              {articles.length} {articles.length === 1 ? "article" : "articles"} · {articles.filter((a) => a.featured).length} featured
             </p>
           </div>
           <Link
@@ -50,9 +50,16 @@ export default async function AdminArticlesPage() {
                   className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 py-4 sm:py-5"
                 >
                   <div className="flex flex-col gap-1 min-w-0">
-                    <span className="font-content text-sm font-semibold text-dark-one wrap-break-word">
-                      {article.title}
-                    </span>
+                    <div className="flex flex-wrap items-center gap-2">
+                      <span className="font-content text-sm font-semibold text-dark-one wrap-break-word">
+                        {article.title}
+                      </span>
+                      {article.featured && (
+                        <span className="font-content text-[10px] font-bold uppercase tracking-wider bg-accent/40 text-dark-one rounded px-1.5 py-0.5 border border-accent/60">
+                          Featured
+                        </span>
+                      )}
+                    </div>
                     <span className="font-content text-xs text-muted">
                       {article.date} · {article.readTime} ·{" "}
                       <span className="text-faint">{article.slug}</span>

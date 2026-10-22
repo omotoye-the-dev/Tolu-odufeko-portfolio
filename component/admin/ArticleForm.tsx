@@ -171,6 +171,20 @@ export function ArticleForm({ article, action, cancelHref }: ArticleFormProps) {
         <p className={hintClass}>Comma-separated</p>
       </div>
 
+      {/* Featured Checkbox */}
+      <div className="flex items-center gap-3">
+        <input
+          id="featured"
+          name="featured"
+          type="checkbox"
+          defaultChecked={article?.featured ?? false}
+          className="h-4 w-4 rounded border-dark-one/30 accent-accent cursor-pointer"
+        />
+        <label htmlFor="featured" className="font-content text-sm text-dark-one cursor-pointer">
+          Featured article (shown on homepage)
+        </label>
+      </div>
+
       {/* Body */}
       <div className="flex flex-col gap-1.5">
         <label htmlFor="body" className={labelClass}>Body *</label>
@@ -192,7 +206,7 @@ export function ArticleForm({ article, action, cancelHref }: ArticleFormProps) {
       {error && (
         <p
           role="alert"
-          className="font-content text-sm text-red-600 border border-red-200 bg-red-50 rounded-xl px-4 py-3"
+          className="font-content text-sm text-red-600 border border-red-200 bg-red-50 rounded-xl px-4 py-3 whitespace-pre-line"
         >
           {error}
         </p>

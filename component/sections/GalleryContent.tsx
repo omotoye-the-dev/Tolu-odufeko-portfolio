@@ -133,14 +133,33 @@ export function GalleryContent({ items }: GalleryContentProps) {
                     </svg>
                   </div>
 
-                  {/* Category Pill */}
-                  {item.category && (
-                    <div className="absolute left-3.5 top-3.5">
+                  {/* Category Pill & Album Badge */}
+                  <div className="absolute left-3.5 top-3.5 flex items-center gap-1.5 z-10">
+                    {item.category && (
                       <span className="rounded-full bg-white/90 px-3 py-1 font-content text-xs font-semibold text-dark-one shadow-sm backdrop-blur-sm">
                         {item.category}
                       </span>
-                    </div>
-                  )}
+                    )}
+                    {item.images && item.images.length > 0 && (
+                      <span className="flex items-center gap-1 rounded-full bg-dark-one/85 px-2.5 py-1 font-content text-[11px] font-semibold text-white shadow-sm backdrop-blur-sm">
+                        <svg
+                          aria-hidden="true"
+                          className="h-3 w-3 text-accent"
+                          fill="none"
+                          viewBox="0 0 24 24"
+                          stroke="currentColor"
+                          strokeWidth={2.5}
+                        >
+                          <path
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"
+                          />
+                        </svg>
+                        {1 + item.images.length} photos
+                      </span>
+                    )}
+                  </div>
                 </div>
 
                 {/* Caption Footer */}

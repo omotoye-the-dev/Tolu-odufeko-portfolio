@@ -581,6 +581,119 @@ export function SiteDetailsForm({ settings, action }: SiteDetailsFormProps) {
               hint="These images appear in the About page narrative sidebar (first 2) and in the Donate Drive impact gallery (all images)."
             />
           </div>
+
+          {/* Donate Drive Impact Statistics */}
+          <div className="flex flex-col gap-3 pt-3 border-t border-dark-one/10">
+            <div>
+              <span className="font-content text-xs font-semibold text-dark-one">
+                Donate Drive Impact Metrics
+              </span>
+              <p className="font-content text-xs text-muted mt-0.5">
+                Editable numbers and labels displayed alongside the narrative on the /about page.
+              </p>
+            </div>
+
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+              {/* Stat 1 */}
+              <div className="rounded-xl border border-dark-one/10 p-3 bg-neutral-50/50 flex flex-col gap-2.5">
+                <span className="font-content text-[11px] font-bold uppercase text-accent-strong">
+                  Impact Metric 1
+                </span>
+                <div className="flex flex-col gap-1">
+                  <label htmlFor="donateStat1Value" className="font-content text-xs font-medium text-dark-one">
+                    Value / Number
+                  </label>
+                  <input
+                    id="donateStat1Value"
+                    name="donateStat1Value"
+                    type="text"
+                    defaultValue={settings.donateStat1Value ?? "2,500+"}
+                    placeholder="2,500+"
+                    className={inputClass}
+                  />
+                </div>
+                <div className="flex flex-col gap-1">
+                  <label htmlFor="donateStat1Label" className="font-content text-xs font-medium text-dark-one">
+                    Label
+                  </label>
+                  <input
+                    id="donateStat1Label"
+                    name="donateStat1Label"
+                    type="text"
+                    defaultValue={settings.donateStat1Label ?? "Children empowered"}
+                    placeholder="Children empowered"
+                    className={inputClass}
+                  />
+                </div>
+              </div>
+
+              {/* Stat 2 */}
+              <div className="rounded-xl border border-dark-one/10 p-3 bg-neutral-50/50 flex flex-col gap-2.5">
+                <span className="font-content text-[11px] font-bold uppercase text-accent-strong">
+                  Impact Metric 2
+                </span>
+                <div className="flex flex-col gap-1">
+                  <label htmlFor="donateStat2Value" className="font-content text-xs font-medium text-dark-one">
+                    Value / Number
+                  </label>
+                  <input
+                    id="donateStat2Value"
+                    name="donateStat2Value"
+                    type="text"
+                    defaultValue={settings.donateStat2Value ?? "10+"}
+                    placeholder="10+"
+                    className={inputClass}
+                  />
+                </div>
+                <div className="flex flex-col gap-1">
+                  <label htmlFor="donateStat2Label" className="font-content text-xs font-medium text-dark-one">
+                    Label
+                  </label>
+                  <input
+                    id="donateStat2Label"
+                    name="donateStat2Label"
+                    type="text"
+                    defaultValue={settings.donateStat2Label ?? "States reached"}
+                    placeholder="States reached"
+                    className={inputClass}
+                  />
+                </div>
+              </div>
+
+              {/* Stat 3 */}
+              <div className="rounded-xl border border-dark-one/10 p-3 bg-neutral-50/50 flex flex-col gap-2.5">
+                <span className="font-content text-[11px] font-bold uppercase text-accent-strong">
+                  Impact Metric 3
+                </span>
+                <div className="flex flex-col gap-1">
+                  <label htmlFor="donateStat3Value" className="font-content text-xs font-medium text-dark-one">
+                    Value / Number
+                  </label>
+                  <input
+                    id="donateStat3Value"
+                    name="donateStat3Value"
+                    type="text"
+                    defaultValue={settings.donateStat3Value ?? "5 yrs"}
+                    placeholder="5 yrs"
+                    className={inputClass}
+                  />
+                </div>
+                <div className="flex flex-col gap-1">
+                  <label htmlFor="donateStat3Label" className="font-content text-xs font-medium text-dark-one">
+                    Label
+                  </label>
+                  <input
+                    id="donateStat3Label"
+                    name="donateStat3Label"
+                    type="text"
+                    defaultValue={settings.donateStat3Label ?? "Of impact"}
+                    placeholder="Of impact"
+                    className={inputClass}
+                  />
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
 
         {/* Skills & Capabilities on About */}
@@ -956,7 +1069,7 @@ export function SiteDetailsForm({ settings, action }: SiteDetailsFormProps) {
       {error && (
         <p
           role="alert"
-          className="font-content text-sm text-red-600 border border-red-200 bg-red-50 rounded-xl px-4 py-3"
+          className="font-content text-sm text-red-600 border border-red-200 bg-red-50 rounded-xl px-4 py-3 whitespace-pre-line"
         >
           {error}
         </p>

@@ -5,6 +5,7 @@ import { z } from "zod";
 import { createClient } from "@/lib/supabase/server";
 import { requireAdminAuth } from "@/lib/supabase/auth-guard";
 import { deleteStorageFile } from "@/lib/supabase/storage";
+import { formatZodError } from "@/lib/validation";
 
 const SettingsSchema = z.object({
   cvUrl: z.string().url("CV must be a valid URL").or(z.literal("")).optional(),
@@ -37,6 +38,12 @@ const SettingsSchema = z.object({
   aboutDonateEyebrow: z.string().optional(),
   aboutDonateTitle: z.string().optional(),
   aboutDonateSubtext: z.string().optional(),
+  donateStat1Value: z.string().optional(),
+  donateStat1Label: z.string().optional(),
+  donateStat2Value: z.string().optional(),
+  donateStat2Label: z.string().optional(),
+  donateStat3Value: z.string().optional(),
+  donateStat3Label: z.string().optional(),
   aboutSkillsEyebrow: z.string().optional(),
   aboutSkillsTitle: z.string().optional(),
   // Projects Page
@@ -79,7 +86,7 @@ export async function updateSiteSettings(formData: FormData): Promise<void> {
   const parsed = SettingsSchema.safeParse(raw);
 
   if (!parsed.success) {
-    throw new Error(parsed.error.issues.map((e) => e.message).join(", "));
+    throw new Error(formatZodError(parsed.error));
   }
 
   const supabase = await createClient();
@@ -154,6 +161,12 @@ export async function updateSiteSettings(formData: FormData): Promise<void> {
   if (formData.has("aboutDonateEyebrow")) updateData.about_donate_eyebrow = parsed.data.aboutDonateEyebrow?.trim() || null;
   if (formData.has("aboutDonateTitle")) updateData.about_donate_title = parsed.data.aboutDonateTitle?.trim() || null;
   if (formData.has("aboutDonateSubtext")) updateData.about_donate_subtext = parsed.data.aboutDonateSubtext?.trim() || null;
+  if (formData.has("donateStat1Value")) updateData.donate_stat1_value = parsed.data.donateStat1Value?.trim() || "2,500+";
+  if (formData.has("donateStat1Label")) updateData.donate_stat1_label = parsed.data.donateStat1Label?.trim() || "Children empowered";
+  if (formData.has("donateStat2Value")) updateData.donate_stat2_value = parsed.data.donateStat2Value?.trim() || "10+";
+  if (formData.has("donateStat2Label")) updateData.donate_stat2_label = parsed.data.donateStat2Label?.trim() || "States reached";
+  if (formData.has("donateStat3Value")) updateData.donate_stat3_value = parsed.data.donateStat3Value?.trim() || "5 yrs";
+  if (formData.has("donateStat3Label")) updateData.donate_stat3_label = parsed.data.donateStat3Label?.trim() || "Of impact";
   if (formData.has("aboutSkillsEyebrow")) updateData.about_skills_eyebrow = parsed.data.aboutSkillsEyebrow?.trim() || null;
   if (formData.has("aboutSkillsTitle")) updateData.about_skills_title = parsed.data.aboutSkillsTitle?.trim() || null;
 

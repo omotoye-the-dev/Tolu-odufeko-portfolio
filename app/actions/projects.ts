@@ -7,24 +7,28 @@ import { requireAdminAuth } from "@/lib/supabase/auth-guard";
 import { deleteStorageFile } from "@/lib/supabase/storage";
 
 // ─────────────────────────────────────────────
+import { formatZodError } from "@/lib/validation";
+
+// ─────────────────────────────────────────────
 // Schema
 // ─────────────────────────────────────────────
 
 const ProjectSchema = z.object({
   slug: z
     .string()
-    .min(1)
-    .regex(/^[a-z0-9-]+$/, "Slug must be lowercase letters, numbers, and hyphens only"),
-  title: z.string().min(1, "Title is required"),
-  categories: z.string().min(1, "At least one category is required"),
-  excerpt: z.string().min(1, "Excerpt is required"),
-  image: z.string().url("Banner image must be a valid URL"),
+    .trim()
+    .min(1, "Slug is required")
+    .regex(/^[a-z0-9-]+$/, "Slug must only contain lowercase letters, numbers, and hyphens"),
+  title: z.string().trim().min(1, "Title is required"),
+  categories: z.string().trim().min(1, "At least one category is required"),
+  excerpt: z.string().trim().min(1, "Excerpt is required"),
+  image: z.string().trim().url("Banner image must be a valid URL"),
   images: z.string().optional(),
-  date: z.string().min(1, "Date is required"),
-  techStack: z.string().min(1, "At least one tech stack item is required"),
+  date: z.string().trim().min(1, "Date is required"),
+  techStack: z.string().trim().min(1, "At least one tech stack item is required"),
   featured: z.string().optional(),
-  link: z.string().url("Link must be a valid URL").or(z.literal("")).optional(),
-  body: z.string().min(1, "Body is required"),
+  link: z.string().trim().url("Link must be a valid URL").or(z.literal("")).optional(),
+  body: z.string().trim().min(1, "Body is required"),
 });
 
 // ─────────────────────────────────────────────
@@ -67,7 +71,7 @@ export async function createProject(formData: FormData): Promise<void> {
   const parsed = ProjectSchema.safeParse(raw);
 
   if (!parsed.success) {
-    throw new Error(parsed.error.issues.map((e) => e.message).join(", "));
+    throw new Error(formatZodError(parsed.error));
   }
 
   const supabase = await createClient();
@@ -102,7 +106,7 @@ export async function updateProject(
   const parsed = ProjectSchema.safeParse(raw);
 
   if (!parsed.success) {
-    throw new Error(parsed.error.issues.map((e) => e.message).join(", "));
+    throw new Error(formatZodError(parsed.error));
   }
 
   const supabase = await createClient();

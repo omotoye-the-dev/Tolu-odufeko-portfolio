@@ -5,6 +5,7 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import Button from "@/component/UI/Button";
 import ImageUpload from "@/component/admin/ImageUpload";
+import MultiImageUpload from "@/component/admin/MultiImageUpload";
 import { toast } from "@/hooks/useToast";
 import type { GalleryItem } from "@/types";
 
@@ -38,7 +39,7 @@ export function GalleryItemForm({
 
     const imageVal = formData.get("imageUrl") as string | null;
     if (!imageVal || !imageVal.trim()) {
-      setError("Please upload an image for the gallery item.");
+      setError("Please upload a primary cover image for the gallery item.");
       return;
     }
 
@@ -46,11 +47,11 @@ export function GalleryItemForm({
       try {
         await action(formData);
         toast.success(
-          item ? "Gallery Photo Updated!" : "Photo Added to Gallery!",
+          item ? "Gallery Item Updated!" : "Item Added to Gallery!",
           {
             description: item
               ? `"${item.title}" details have been updated.`
-              : "Your photo is now live in your public portfolio gallery.",
+              : "Your photo story is now live in your public portfolio gallery.",
           }
         );
         router.push(cancelHref);
@@ -74,16 +75,28 @@ export function GalleryItemForm({
 
   return (
     <form onSubmit={handleSubmit} className="flex flex-col gap-6" noValidate>
-      {/* Photo Upload */}
-      <div className="rounded-2xl border-2 border-dark-one/10 bg-white p-4 sm:p-6 shadow-xs">
+      {/* Photo Upload Section */}
+      <div className="flex flex-col gap-6 rounded-2xl border-2 border-dark-one/10 bg-white p-4 sm:p-6 shadow-xs">
+        {/* 1. Primary Cover Photo */}
         <ImageUpload
           defaultValue={item?.imageUrl ?? ""}
           name="imageUrl"
           folder="gallery"
-          label="Gallery Photo *"
+          label="Primary Cover Photo *"
           accept="image/png,image/jpeg,image/webp,image/avif"
-          hint="PNG, JPG, WebP, or AVIF image (max 5MB)"
+          hint="Main thumbnail shown on the gallery grid (PNG, JPG, WebP, max 5MB)"
         />
+
+        {/* 2. Additional Album Visuals */}
+        <div className="border-t border-dark-one/10 pt-5">
+          <MultiImageUpload
+            defaultValues={item?.images ?? []}
+            name="images"
+            folder="gallery"
+            label="Additional Album Photos (Optional)"
+            hint="Upload multiple photos to group them into an album / photo story (PNG, JPG, WebP, max 5MB each)."
+          />
+        </div>
       </div>
 
       {/* Title & Category */}
@@ -179,7 +192,7 @@ export function GalleryItemForm({
       {error && (
         <p
           role="alert"
-          className="font-content text-sm text-red-600 border border-red-200 bg-red-50 rounded-xl px-4 py-3"
+          className="font-content text-sm text-red-600 border border-red-200 bg-red-50 rounded-xl px-4 py-3 whitespace-pre-line"
         >
           {error}
         </p>

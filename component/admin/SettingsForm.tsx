@@ -186,7 +186,7 @@ export function SettingsForm({ settings, action }: SettingsFormProps) {
       {error && (
         <p
           role="alert"
-          className="font-content text-sm text-red-600 border border-red-200 bg-red-50 rounded-xl px-4 py-3"
+          className="font-content text-sm text-red-600 border border-red-200 bg-red-50 rounded-xl px-4 py-3 whitespace-pre-line"
         >
           {error}
         </p>

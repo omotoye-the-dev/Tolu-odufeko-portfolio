@@ -12,7 +12,7 @@ export interface MultiImageUploadProps {
   readonly name?: string;
   readonly label?: string;
   readonly hint?: string;
-  readonly folder?: "projects" | "articles" | "media";
+  readonly folder?: "projects" | "articles" | "media" | "gallery" | "now";
   readonly bucket?: string;
 }
 

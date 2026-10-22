@@ -1,3 +1,4 @@
+import Image from "next/image";
 import Link from "next/link";
 import AdminShell from "@/component/admin/AdminShell";
 import EmptyState from "@/component/UI/EmptyState";
@@ -41,46 +42,82 @@ export default async function AdminNowPage() {
           />
         ) : (
           <div className="flex flex-col gap-3 sm:gap-4">
-            {items.map((item, i) => (
-              <div
-                key={item.id ?? i}
-                className="rounded-2xl border-2 border-dark-one/10 bg-white p-4 sm:p-5 shadow-2xs"
-              >
-                <div className="flex flex-col sm:flex-row sm:items-start justify-between gap-3 sm:gap-4">
-                  <div className="flex flex-col gap-1.5 min-w-0">
-                    <div className="flex items-center gap-2 flex-wrap">
-                      <span className="font-content text-xs font-bold uppercase tracking-wider text-accent-strong">
-                        {item.status}
-                      </span>
-                      <span className="font-content text-xs text-faint">
-                        {item.date}
-                      </span>
-                    </div>
-                    <p className="font-content text-sm font-semibold text-dark-one wrap-break-word">
-                      {item.title}
-                    </p>
-                    <p className="font-content text-xs text-muted leading-relaxed wrap-break-word">
-                      {item.description}
-                    </p>
-                  </div>
+            {items.map((item, i) => {
+              const visualThumb =
+                item.image ||
+                (item.images && item.images.length > 0 ? item.images[0] : null);
+              const totalVisuals =
+                (item.image ? 1 : 0) + (item.images?.length ?? 0);
 
-                  <div className="flex items-center gap-3 pt-2 sm:pt-0 border-t sm:border-t-0 border-dark-one/5 justify-end sm:justify-start shrink-0">
-                    <Link
-                      href={`/admin/now/${item.id}/edit`}
-                      className="font-content text-xs font-semibold text-accent-strong hover:text-dark-one transition-colors px-2 py-1"
-                    >
-                      Edit →
-                    </Link>
-                    <AdminDeleteButton
-                      itemId={item.id ?? ""}
-                      itemTitle={item.title}
-                      itemType="item"
-                      onDelete={deleteNowItem}
-                    />
+              return (
+                <div
+                  key={item.id ?? i}
+                  className="rounded-2xl border-2 border-dark-one/10 bg-white p-4 sm:p-5 shadow-2xs"
+                >
+                  <div className="flex flex-col sm:flex-row sm:items-start justify-between gap-3 sm:gap-4">
+                    <div className="flex items-start gap-3.5 min-w-0">
+                      {visualThumb && (
+                        <div className="relative h-16 w-16 sm:h-20 sm:w-20 shrink-0 overflow-hidden rounded-xl border border-dark-one/15 bg-neutral-100 shadow-2xs">
+                          <Image
+                            src={visualThumb}
+                            alt={item.title}
+                            fill
+                            sizes="80px"
+                            className="object-cover"
+                          />
+                        </div>
+                      )}
+                      <div className="flex flex-col gap-1.5 min-w-0">
+                        <div className="flex items-center gap-2 flex-wrap">
+                          <span className="font-content text-xs font-bold uppercase tracking-wider text-accent-strong">
+                            {item.status}
+                          </span>
+                          <span className="font-content text-xs text-faint">
+                            {item.date}
+                          </span>
+                          {totalVisuals > 0 && (
+                            <span className="font-content text-[11px] font-semibold bg-dark-one/10 text-dark-one rounded px-2 py-0.5">
+                              📷 {totalVisuals} visual{totalVisuals > 1 ? "s" : ""}
+                            </span>
+                          )}
+                          {item.link && (
+                            <a
+                              href={item.link}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              className="font-content text-[11px] font-semibold bg-accent/30 text-dark-one hover:bg-accent hover:text-dark-one rounded px-2 py-0.5 transition-colors"
+                            >
+                              🔗 {item.linkText || "Resource Link"} ↗
+                            </a>
+                          )}
+                        </div>
+                        <p className="font-content text-sm font-semibold text-dark-one wrap-break-word">
+                          {item.title}
+                        </p>
+                        <p className="font-content text-xs text-muted leading-relaxed wrap-break-word">
+                          {item.description}
+                        </p>
+                      </div>
+                    </div>
+
+                    <div className="flex items-center gap-3 pt-2 sm:pt-0 border-t sm:border-t-0 border-dark-one/5 justify-end sm:justify-start shrink-0">
+                      <Link
+                        href={`/admin/now/${item.id}/edit`}
+                        className="font-content text-xs font-semibold text-accent-strong hover:text-dark-one transition-colors px-2 py-1"
+                      >
+                        Edit →
+                      </Link>
+                      <AdminDeleteButton
+                        itemId={item.id ?? ""}
+                        itemTitle={item.title}
+                        itemType="item"
+                        onDelete={deleteNowItem}
+                      />
+                    </div>
                   </div>
                 </div>
-              </div>
-            ))}
+              );
+            })}
           </div>
         )}
       </div>

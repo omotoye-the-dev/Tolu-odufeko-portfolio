@@ -11,10 +11,10 @@ export default function NewGalleryItemPage() {
             Gallery Management
           </span>
           <h1 className="mt-1 font-header text-3xl sm:text-4xl text-dark-one">
-            Upload Photo
+            Upload Photo / Album
           </h1>
           <p className="mt-1 font-content text-xs sm:text-sm text-muted">
-            Add a new photograph, event moment, or engineering milestone to your public gallery.
+            Add a photograph or multi-image album story to your public portfolio gallery.
           </p>
         </div>
 

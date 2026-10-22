@@ -25,6 +25,7 @@ export interface Article {
   readonly date: string;
   readonly readTime: string;
   readonly tags: readonly string[];
+  readonly featured?: boolean;
   readonly link?: string;
   readonly body: readonly string[];
 }
@@ -35,6 +36,10 @@ export interface NowItem {
   readonly description: string;
   readonly date: string;
   readonly status: string;
+  readonly image?: string;
+  readonly images?: readonly string[];
+  readonly link?: string;
+  readonly linkText?: string;
   readonly sortOrder?: number;
   readonly createdAt?: string;
   readonly updatedAt?: string;
@@ -73,6 +78,12 @@ export interface SiteSettings {
   readonly aboutDonateEyebrow?: string;
   readonly aboutDonateTitle?: string;
   readonly aboutDonateSubtext?: string;
+  readonly donateStat1Value?: string;
+  readonly donateStat1Label?: string;
+  readonly donateStat2Value?: string;
+  readonly donateStat2Label?: string;
+  readonly donateStat3Value?: string;
+  readonly donateStat3Label?: string;
   readonly aboutSkillsEyebrow?: string;
   readonly aboutSkillsTitle?: string;
   // Projects Page
@@ -102,6 +113,7 @@ export interface GalleryItem {
   readonly title: string;
   readonly caption?: string;
   readonly imageUrl: string;
+  readonly images?: readonly string[];
   readonly category: string;
   readonly eventDate?: string;
   readonly sortOrder?: number;

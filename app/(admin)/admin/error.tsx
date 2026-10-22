@@ -14,14 +14,27 @@ export default function AdminError({ error, reset }: AdminErrorProps) {
     console.error("Admin dashboard error:", error);
   }, [error]);
 
+  const isMinifiedReactError =
+    error.message?.includes("Minified React error") ||
+    error.message?.includes("react.dev/errors");
+
+  const displayMessage = isMinifiedReactError
+    ? "A server component error occurred while rendering this admin view. Check your terminal/server logs for the full stack trace."
+    : error.message || "Failed to load admin content.";
+
   return (
     <AdminShell>
       <div className="px-8 py-16 max-w-2xl">
         <ErrorState
           title="Admin Error"
-          message={error.message || "Failed to load admin content."}
+          message={displayMessage}
           onRetry={reset}
         />
+        {error.digest && (
+          <p className="mt-4 font-content text-xs text-muted/60">
+            Error digest: <code className="font-mono">{error.digest}</code>
+          </p>
+        )}
       </div>
     </AdminShell>
   );

@@ -63,6 +63,11 @@ export default async function AdminGalleryPage() {
                       <span className="font-content rounded-md bg-white/90 backdrop-blur-xs px-2 py-0.5 text-[11px] font-bold uppercase tracking-wider text-dark-one shadow-xs">
                         {item.category}
                       </span>
+                      {item.images && item.images.length > 0 && (
+                        <span className="font-content rounded-md bg-dark-one/90 backdrop-blur-xs px-2 py-0.5 text-[11px] font-bold text-white shadow-xs">
+                          📷 {1 + item.images.length} photos
+                        </span>
+                      )}
                     </div>
                     {item.sortOrder !== undefined && item.sortOrder > 0 && (
                       <span className="absolute top-2.5 right-2.5 font-content rounded-md bg-dark-one/80 backdrop-blur-xs px-1.5 py-0.5 text-[10px] font-bold text-white">

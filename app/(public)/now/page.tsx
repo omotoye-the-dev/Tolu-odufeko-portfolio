@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import Container from "@/component/UI/Container";
 import { getNowItems, getSiteSettings } from "@/lib/data";
+import { NowTimeline } from "@/component/sections/NowTimeline";
 
 export const metadata: Metadata = {
   title: "Now",
@@ -76,32 +77,7 @@ export default async function NowPage() {
         </div>
 
         {/* Timeline Items List */}
-        <ul className="mt-6 divide-y divide-dark-one/15">
-          {nowItems.map((item, index) => (
-            <li
-              key={item.id ?? `${item.title}-${index}`}
-              className="group grid grid-cols-1 gap-3 py-8 sm:grid-cols-[200px_1fr] sm:gap-6 transition-colors hover:bg-white/40 px-3 sm:px-4 rounded-xl"
-            >
-              <div className="flex flex-row sm:flex-col items-center sm:items-start justify-between sm:justify-start gap-2">
-                <span className="font-content text-xs sm:text-sm font-medium text-muted">
-                  {item.date}
-                </span>
-                <span className="font-content w-fit rounded-md border border-accent bg-accent/15 px-2.5 py-0.5 text-[11px] font-bold uppercase tracking-wider text-dark-one">
-                  {item.status}
-                </span>
-              </div>
-
-              <div>
-                <h2 className="font-header text-xl sm:text-2xl font-bold text-dark-one group-hover:text-accent-strong transition-colors">
-                  {item.title}
-                </h2>
-                <p className="font-content mt-2 text-base leading-relaxed text-muted">
-                  {item.description}
-                </p>
-              </div>
-            </li>
-          ))}
-        </ul>
+        <NowTimeline items={nowItems} />
       </Container>
     </div>
   );

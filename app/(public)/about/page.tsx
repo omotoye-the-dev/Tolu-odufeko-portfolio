@@ -52,15 +52,24 @@ const NGO_IMAGES = [
   },
 ] as const;
 
-const IMPACT_STATS = [
-  { value: "2,500+", label: "Children empowered" },
-  { value: "10+", label: "States reached" },
-  { value: "5 yrs", label: "Of impact" },
-] as const;
-
 export default async function AboutPage() {
   const settings = await getSiteSettings();
   const aboutSchema = generateAboutSchema(`${SITE_URL}/about`, settings);
+
+  const impactStats = [
+    {
+      value: settings.donateStat1Value || "2,500+",
+      label: settings.donateStat1Label || "Children empowered",
+    },
+    {
+      value: settings.donateStat2Value || "10+",
+      label: settings.donateStat2Label || "States reached",
+    },
+    {
+      value: settings.donateStat3Value || "5 yrs",
+      label: settings.donateStat3Label || "Of impact",
+    },
+  ];
 
   const ngoImages =
     settings.aboutNgoImages && settings.aboutNgoImages.length > 0
@@ -228,7 +237,7 @@ export default async function AboutPage() {
             </p>
 
             <div className="grid grid-cols-3 gap-4 sm:gap-6">
-              {IMPACT_STATS.map((stat) => (
+              {impactStats.map((stat) => (
                 <div key={stat.label} className="flex flex-col justify-center">
                   <div className="font-header text-2xl sm:text-3xl lg:text-4xl font-bold text-accent-strong">
                     {stat.value}

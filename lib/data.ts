@@ -35,6 +35,7 @@ interface ArticleRow {
   date: string;
   read_time: string;
   tags: string[];
+  featured?: boolean;
   link: string | null;
   body: string[];
 }
@@ -45,6 +46,10 @@ interface NowItemRow {
   description: string;
   date: string;
   status: string;
+  image?: string | null;
+  images?: string[];
+  link?: string | null;
+  link_text?: string | null;
   sort_order: number;
   created_at?: string;
   updated_at?: string;
@@ -55,6 +60,7 @@ interface GalleryItemRow {
   title: string;
   caption?: string | null;
   image_url: string;
+  images?: string[];
   category: string;
   event_date?: string | null;
   sort_order: number;
@@ -94,6 +100,7 @@ function mapArticle(row: ArticleRow): Article {
     date: row.date,
     readTime: row.read_time,
     tags: row.tags,
+    featured: row.featured,
     link: row.link ?? undefined,
     body: row.body,
   };
@@ -106,6 +113,10 @@ function mapNowItem(row: NowItemRow): NowItem {
     description: row.description,
     date: row.date,
     status: row.status,
+    image: row.image ?? undefined,
+    images: Array.isArray(row.images) ? row.images : [],
+    link: row.link ?? undefined,
+    linkText: row.link_text ?? undefined,
     sortOrder: row.sort_order,
     createdAt: row.created_at,
     updatedAt: row.updated_at,
@@ -118,6 +129,7 @@ function mapGalleryItem(row: GalleryItemRow): GalleryItem {
     title: row.title,
     caption: row.caption ?? undefined,
     imageUrl: row.image_url,
+    images: Array.isArray(row.images) ? row.images : [],
     category: row.category,
     eventDate: row.event_date ?? undefined,
     sortOrder: row.sort_order,
@@ -182,6 +194,22 @@ export async function getArticles(): Promise<Article[]> {
 
   if (error) {
     console.error("getArticles error:", error.message);
+    return [];
+  }
+
+  return (data as ArticleRow[]).map(mapArticle);
+}
+
+export async function getFeaturedArticles(): Promise<Article[]> {
+  const supabase = await createClient();
+  const { data, error } = await supabase
+    .from("articles")
+    .select("*")
+    .eq("featured", true)
+    .order("date", { ascending: false });
+
+  if (error) {
+    console.error("getFeaturedArticles error:", error.message);
     return [];
   }
 
@@ -275,6 +303,12 @@ interface SiteSettingsRow {
   about_donate_eyebrow?: string | null;
   about_donate_title?: string | null;
   about_donate_subtext?: string | null;
+  donate_stat1_value?: string | null;
+  donate_stat1_label?: string | null;
+  donate_stat2_value?: string | null;
+  donate_stat2_label?: string | null;
+  donate_stat3_value?: string | null;
+  donate_stat3_label?: string | null;
   about_skills_eyebrow?: string | null;
   about_skills_title?: string | null;
   // Projects Page
@@ -366,6 +400,12 @@ function mapSiteSettings(row: SiteSettingsRow): SiteSettings {
     aboutDonateSubtext:
       row.about_donate_subtext ||
       "Donate Drive is committed to helping children from underserved communities discover purpose and gain access to opportunities that can shape their future. Over the past five years, we have empowered children through education, mentorship, scholarships, skills development, and community outreach.",
+    donateStat1Value: row.donate_stat1_value || "2,500+",
+    donateStat1Label: row.donate_stat1_label || "Children empowered",
+    donateStat2Value: row.donate_stat2_value || "10+",
+    donateStat2Label: row.donate_stat2_label || "States reached",
+    donateStat3Value: row.donate_stat3_value || "5 yrs",
+    donateStat3Label: row.donate_stat3_label || "Of impact",
     aboutSkillsEyebrow: row.about_skills_eyebrow || "Capabilities",
     aboutSkillsTitle: row.about_skills_title || "Skills & Expertise",
     projectsPageEyebrow: row.projects_page_eyebrow || "Portfolio",
@@ -434,6 +474,12 @@ export async function getSiteSettings(): Promise<SiteSettings> {
     aboutDonateTitle: "What I'm Building",
     aboutDonateSubtext:
       "Donate Drive is committed to helping children from underserved communities discover purpose and gain access to opportunities that can shape their future. Over the past five years, we have empowered children through education, mentorship, scholarships, skills development, and community outreach.",
+    donateStat1Value: "2,500+",
+    donateStat1Label: "Children empowered",
+    donateStat2Value: "10+",
+    donateStat2Label: "States reached",
+    donateStat3Value: "5 yrs",
+    donateStat3Label: "Of impact",
     aboutSkillsEyebrow: "Capabilities",
     aboutSkillsTitle: "Skills & Expertise",
     projectsPageEyebrow: "Portfolio",
