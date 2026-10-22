@@ -32,41 +32,16 @@ if (existsSync(envPath)) {
 const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
 const supabaseKey = process.env.SUPABASE_SERVICE_ROLE_KEY || process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
 
-console.log("\n=======================================================");
-console.log("  Remove Public Email: Database Script");
-console.log("=======================================================\n");
-
-const sqlToRun = `ALTER TABLE site_settings DROP COLUMN IF EXISTS email;`;
-
-console.log("1. Supabase SQL Query to permanently drop the column:\n");
-console.log(`   ${sqlToRun}\n`);
-console.log("   (Run this query in your Supabase Dashboard: SQL Editor -> New Query)\n");
-
 if (supabaseUrl && supabaseKey) {
   try {
     const supabase = createClient(supabaseUrl, supabaseKey);
-    console.log("2. Checking database row in 'site_settings'...");
     
-    // Attempt to clear any existing email in the row if the column is still present
-    const { error: updateError } = await supabase
+    // Clear any stored email in the row if the column is still present
+    await supabase
       .from("site_settings")
       .update({ email: "" })
       .eq("id", "default");
-
-    if (updateError) {
-      if (updateError.message?.includes("column") || updateError.code === "PGRST204") {
-        console.log("   ✓ Column 'email' is already removed or inaccessible via API.");
-      } else {
-        console.log(`   Note on data update: ${updateError.message}`);
-      }
-    } else {
-      console.log("   ✓ Successfully cleared any stored email data from 'site_settings'.");
-    }
-  } catch (err) {
-    console.log(`   Could not connect to Supabase: ${err instanceof Error ? err.message : String(err)}`);
+  } catch {
+    // Silent execution
   }
-} else {
-  console.log("   Note: Supabase credentials not found in environment. Please execute the SQL query above directly in the Supabase SQL editor.");
 }
-
-console.log("\n=======================================================\n");
