@@ -24,8 +24,8 @@ export async function Herosection() {
 
           {/* CTA Buttons */}
           <div className="flex flex-wrap gap-4 pt-8 sm:pt-10">
-            <Button variant="primary" href="/projects">
-              Explore my work
+            <Button variant="primary" href="/articles">
+              Read my articles
             </Button>
             {settings.cvUrl ? (
               <Button
