@@ -41,7 +41,6 @@ export function SettingsForm({ settings, action }: SettingsFormProps) {
     "font-content w-full rounded-xl border-2 border-dark-one/15 bg-light px-4 py-3 text-sm text-dark-one placeholder:text-faint transition-colors focus:border-accent focus:outline-none";
   const labelClass =
     "font-content text-xs font-semibold uppercase tracking-wider text-dark-one/70";
-  const hintClass = "font-content text-xs text-faint mt-1";
 
   return (
     <form onSubmit={handleSubmit} className="flex flex-col gap-6" noValidate>

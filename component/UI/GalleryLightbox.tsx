@@ -21,12 +21,14 @@ export function GalleryLightbox({
   const isOpen = currentIndex !== null && currentIndex >= 0 && currentIndex < items.length;
   const currentItem = isOpen && currentIndex !== null ? items[currentIndex] : null;
 
+  const [prevIndex, setPrevIndex] = useState<number | null>(currentIndex);
   const [photoIndex, setPhotoIndex] = useState<number>(0);
 
   // Reset photo index whenever a different gallery item is opened
-  useEffect(() => {
+  if (prevIndex !== currentIndex) {
+    setPrevIndex(currentIndex);
     setPhotoIndex(0);
-  }, [currentIndex]);
+  }
 
   // Consolidate primary image + any additional album images
   const albumPhotos = useMemo(() => {
