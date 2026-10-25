@@ -47,7 +47,7 @@ function LoginForm() {
           role="status"
           className="font-content text-xs text-amber-800 border border-amber-200 bg-amber-50 rounded-xl px-4 py-3"
         >
-          Session expired due to 5 minutes of inactivity. Please sign in again.
+          Session expired due to 30 minutes of inactivity. Please sign in again.
         </div>
       )}
 

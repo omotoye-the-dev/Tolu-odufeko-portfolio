@@ -3,7 +3,7 @@
 import { useEffect, useRef } from "react";
 import { signOut, updateAdminActivity } from "@/app/actions/auth";
 
-const INACTIVITY_TIMEOUT_MS = 5 * 60 * 1000; // 5 minutes
+const INACTIVITY_TIMEOUT_MS = 30 * 60 * 1000; // 30 minutes
 const PING_INTERVAL_MS = 30 * 1000; // Ping server at most every 30 seconds of activity
 
 export function AdminInactivityGuard() {

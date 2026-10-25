@@ -1,7 +1,7 @@
 import type { Article, Project, SiteSettings } from "@/types";
 
 export const SITE_URL =
-  process.env.NEXT_PUBLIC_SITE_URL || "https://www.toluwanimiodufeko.com";
+  process.env.NEXT_PUBLIC_SITE_URL || "https://www.toluodufeko.com";
 
 export const PERSON_ID = `${SITE_URL}/#person`;
 export const WEBSITE_ID = `${SITE_URL}/#website`;
@@ -13,15 +13,18 @@ export function validateSchema(schema: Record<string, unknown>): boolean {
   const hasContext = Boolean(schema["@context"]);
   const hasTypeOrGraph = Boolean(
     schema["@type"] ||
-      (Array.isArray(schema["@graph"]) &&
-        schema["@graph"].length > 0 &&
-        schema["@graph"].every(
-          (item) => typeof item === "object" && item !== null && "@type" in item
-        ))
+    (Array.isArray(schema["@graph"]) &&
+      schema["@graph"].length > 0 &&
+      schema["@graph"].every(
+        (item) => typeof item === "object" && item !== null && "@type" in item,
+      )),
   );
 
   if (!hasContext || !hasTypeOrGraph) {
-    console.warn("[SEO Schema] Missing valid @context, @type, or @graph:", schema);
+    console.warn(
+      "[SEO Schema] Missing valid @context, @type, or @graph:",
+      schema,
+    );
     return false;
   }
   return true;
@@ -31,22 +34,23 @@ export function validateSchema(schema: Record<string, unknown>): boolean {
  * Generates Root WebSite & Person Schema.
  * Canonical Person and WebSite entity graph.
  */
-export function generateRootSchema(settings?: SiteSettings): Record<string, unknown> {
+export function generateRootSchema(
+  settings?: SiteSettings,
+): Record<string, unknown> {
   const verifiedSameAs = [
     settings?.linkedinUrl,
     settings?.githubUrl,
     settings?.instagramUrl ?? settings?.twitterUrl,
-  ].filter(
-    (url): url is string =>
-      Boolean(
-        url &&
-          url.trim().length > 0 &&
-          !url.includes("example.com") &&
-          url !== "https://linkedin.com" &&
-          url !== "https://github.com" &&
-          url !== "https://x.com" &&
-          url !== "https://instagram.com"
-      )
+  ].filter((url): url is string =>
+    Boolean(
+      url &&
+      url.trim().length > 0 &&
+      !url.includes("example.com") &&
+      url !== "https://linkedin.com" &&
+      url !== "https://github.com" &&
+      url !== "https://x.com" &&
+      url !== "https://instagram.com",
+    ),
   );
 
   const rootGraph = {
@@ -101,7 +105,7 @@ export function generateRootSchema(settings?: SiteSettings): Record<string, unkn
 export function generateArticleSchema(
   article: Article,
   canonicalUrl: string,
-  includeContext = true
+  includeContext = true,
 ): Record<string, unknown> {
   const schema: Record<string, unknown> = {
     ...(includeContext ? { "@context": "https://schema.org" } : {}),
@@ -146,10 +150,10 @@ export function generateArticleSchema(
 export function generateProjectSchema(
   project: Project,
   canonicalUrl: string,
-  includeContext = true
+  includeContext = true,
 ): Record<string, unknown> {
   const isSoftware = project.categories.some((c) =>
-    c.toLowerCase().includes("software")
+    c.toLowerCase().includes("software"),
   );
 
   const schema: Record<string, unknown> = {
@@ -201,7 +205,7 @@ export function generateProjectSchema(
  */
 export function generateBreadcrumbSchema(
   items: Array<{ name: string; url: string }>,
-  includeContext = true
+  includeContext = true,
 ): Record<string, unknown> {
   const schema: Record<string, unknown> = {
     ...(includeContext ? { "@context": "https://schema.org" } : {}),
@@ -225,7 +229,7 @@ export function generateBreadcrumbSchema(
  */
 export function generateAboutSchema(
   canonicalUrl: string,
-  settings?: SiteSettings
+  settings?: SiteSettings,
 ): Record<string, unknown> {
   const schema = {
     "@context": "https://schema.org",
@@ -251,7 +255,7 @@ export function generateAboutSchema(
  */
 export function generateContactSchema(
   canonicalUrl: string,
-  settings?: SiteSettings
+  settings?: SiteSettings,
 ): Record<string, unknown> {
   const schema = {
     "@context": "https://schema.org",
@@ -278,7 +282,7 @@ export function generateContactSchema(
 export function generateGallerySchema(
   canonicalUrl: string,
   itemsCount: number,
-  settings?: SiteSettings
+  settings?: SiteSettings,
 ): Record<string, unknown> {
   const schema = {
     "@context": "https://schema.org",
@@ -299,4 +303,3 @@ export function generateGallerySchema(
   validateSchema(schema);
   return schema;
 }
-

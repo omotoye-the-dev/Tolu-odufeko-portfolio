@@ -10,7 +10,7 @@ An enterprise-grade, high-performance personal portfolio and content management 
 - **Enterprise Security**:
   - Session authentication with Supabase Auth.
   - Server Action authentication guards (`requireAdminAuth`) preventing unauthorized database and storage mutations.
-  - Automatic session inactivity timeout (5-minute inactivity sign-out guard).
+  - Automatic session inactivity timeout (30-minute inactivity sign-out guard).
   - Rate-limited login attempts with exponential backoff and lockout protection.
   - Production HTTP security headers (HSTS, X-Frame-Options, CSP-ready, nosniff, Referrer-Policy).
 - **Automated Media Lifecycle**:
@@ -109,7 +109,7 @@ NEXT_PUBLIC_SUPABASE_ANON_KEY=your-anon-public-key
 # Optional Service Role (Server operations only)
 SUPABASE_SERVICE_ROLE_KEY=your-service-role-key
 
-# Site URL for metadata & sitemaps (default fallback: https://www.toluwanimiodufeko.com)
+# Site URL for metadata & sitemaps (default fallback: https://www.toluodufeko.com)
 NEXT_PUBLIC_SITE_URL=http://localhost:3000
 ```
 
@@ -146,7 +146,7 @@ Visit [http://localhost:3000/admin](http://localhost:3000/admin) to log in to th
 
 - **Zero Client Secret Leaks**: Only `NEXT_PUBLIC_` prefixed keys are accessible on the client.
 - **Server Action Auth Guard**: Every mutating action (`createArticle`, `updateProject`, `deleteArticle`, etc.) calls `requireAdminAuth(supabase)` to verify the admin session before executing database queries or deleting media from storage.
-- **Inactivity Timeout**: Client-side event tracking resets a 5-minute inactivity timer, triggering automatic session termination and signout upon idle.
+- **Inactivity Timeout**: Client-side event tracking resets a 30-minute inactivity timer, triggering automatic session termination and signout upon idle.
 
 ---
 

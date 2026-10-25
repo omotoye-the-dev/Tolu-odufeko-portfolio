@@ -2,7 +2,7 @@ import { type NextRequest, NextResponse } from "next/server";
 import { createServerClient } from "@supabase/ssr";
 import { env } from "@/lib/env";
 
-const INACTIVITY_TIMEOUT_MS = 5 * 60 * 1000; // 5 minutes
+const INACTIVITY_TIMEOUT_MS = 30 * 60 * 1000; // 30 minutes
 
 export async function middleware(request: NextRequest) {
   let supabaseResponse = NextResponse.next({ request });
@@ -47,7 +47,7 @@ export async function middleware(request: NextRequest) {
     if (lastActivityCookie?.value) {
       const lastActivityTime = parseInt(lastActivityCookie.value, 10);
       if (!Number.isNaN(lastActivityTime) && Date.now() - lastActivityTime > INACTIVITY_TIMEOUT_MS) {
-        // Session expired due to 5 minutes of inactivity
+        // Session expired due to 30 minutes of inactivity
         await supabase.auth.signOut();
         const loginUrl = request.nextUrl.clone();
         loginUrl.pathname = "/admin/login";
